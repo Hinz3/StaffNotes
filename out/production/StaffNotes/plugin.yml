@@ -1,0 +1,12 @@
+name: StaffNotes
+version: 0.1
+main: dk.jacobhinze.StaffNotes.StaffNotes
+description: Make notes on players for other staff members
+
+commands:
+    ping:
+        usage: /<command>
+        description: Test Command
+    pong:
+            usage: /<command>
+            description: Test Command
