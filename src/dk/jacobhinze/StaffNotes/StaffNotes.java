@@ -9,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
@@ -29,7 +30,7 @@ public class StaffNotes extends JavaPlugin {
         saveDefaultConfig();
 
         host = getConfig().getString("host");
-        username = getConfig().getString("password");
+        username = getConfig().getString("username");
         password = getConfig().getString("password");
         database = getConfig().getString("database");
         port = getConfig().getInt("port");
@@ -37,6 +38,15 @@ public class StaffNotes extends JavaPlugin {
         try {
             openConnection();
             statement = connection.createStatement();
+
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `players` (" +
+                    "`fldID` int(255) NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                    "`fldUUID` varchar(255) NOT NULL," +
+                    "`fldNote` text CHARACTER SET utf16 COLLATE utf16_danish_ci NOT NULL," +
+                    "`fldAdmin` varchar(255) NOT NULL," +
+                    "`fldTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+                    ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1\n;");
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -48,87 +58,106 @@ public class StaffNotes extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         NoteManager noteManager = new NoteManager(statement, msg);
 
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             msg.error(sender, "Only players can use this Staff Notes!");
             return true;
         }
 
         final Player player = (Player) sender;
 
-        if(cmd.getName().equalsIgnoreCase("staffnotes")) {
+        if (cmd.getName().equalsIgnoreCase("staffnotes")) {
 
-            if(args.length == 0) {
-                if(havePermission(player, "list")) {
+            if (args.length == 0) {
+                if (havePermission(player, "list")) {
                     CommandList.showList(player);
                 }
                 return true;
             }
 
-            if(args[0].equalsIgnoreCase("add")) {
-                if(havePermission(player, "add")) {
+            if (args[0].equalsIgnoreCase("add")) {
+                if (havePermission(player, "add")) {
                     if (!(args.length >= 3)) {
                         msg.error(player, "Usage: " + ChatColor.GOLD + "/staffnotes add [Player] [Note]");
-                        return true;
                     } else {
                         String note = "";
 
-                        for (int i = 3; i < args.length; i++) {
-                            String arg = args[i] + "";
+                        for (int i = 2; i < args.length; i++) {
+                            String arg = args[i] + " ";
                             note = note + arg;
                         }
 
-                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
 
-                        noteManager.addNote(offlinePlayer, player, note);
+                        noteManager.addNote(target, player, note);
 
-                        return true;
                     }
                 }
                 return true;
             }
 
-            if(args[0].equalsIgnoreCase("show")) {
-                if(!(args.length == 2)) {
-                    msg.error(player, "Usage: " + ChatColor.GOLD + "/staffnotes show [Player]");
-                    return true;
-                } else {
-                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+            if (args[0].equalsIgnoreCase("show")) {
+                if (havePermission(player, "show")) {
+                    if (!(args.length == 2)) {
+                        msg.error(player, "Usage: " + ChatColor.GOLD + "/staffnotes show [Player]");
+                    } else {
+                        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
 
-                    noteManager.showNotes(offlinePlayer, player);
+                        noteManager.showNotes(target, player);
 
-                    return true;
+                    }
                 }
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("remove")) {
+                if (havePermission(player, "remove")) {
+                    if (!(args.length == 3)) {
+                        msg.error(player, "Usage: " + ChatColor.YELLOW + "/staffnotes remove [Player] [NoteID]");
+                    } else {
+                        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+                        int noteID = Integer.parseInt(args[2]);
+
+                        noteManager.removeNote(target, player, noteID);
+
+                    }
+                }
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("removeall")) {
+                if (havePermission(player, "removeall")) {
+                    if (!(args.length == 2)) {
+                        msg.error(player, "Usage: " + ChatColor.YELLOW + "/staffnotes removeall [Player]");
+                    } else {
+                        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+                        noteManager.removeAll(target, player);
+                    }
+                }
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("info")) {
+                if (havePermission(player, "info")) {
+                    PluginDescriptionFile pdf = this.getDescription();
+
+                    player.sendMessage(ChatColor.GOLD + "-----------------------------------------------------");
+                    player.sendMessage(ChatColor.GOLD + "Name: " + ChatColor.YELLOW + "Staff Notes");
+                    player.sendMessage(ChatColor.GOLD + "Version: " + ChatColor.YELLOW + pdf.getVersion());
+                    player.sendMessage(ChatColor.GOLD + "Author: " + ChatColor.YELLOW + "shadow5353");
+                    player.sendMessage(ChatColor.GOLD + "Description: " + ChatColor.YELLOW + pdf.getDescription());
+                    player.sendMessage(ChatColor.GOLD + "-----------------------------------------------------");
+                }
+                return true;
             }
         }
-
-//        if(cmd.getName().equalsIgnoreCase("ping")) {
-//            try {
-//                statement.executeUpdate("INSERT INTO players (fldUUID, fldNotes) VALUES (123, 'Test')");
-//
-//                msg.info(player, "Added to database!");
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        if(cmd.getName().equalsIgnoreCase("pong")) {
-//            try {
-//                ResultSet result = statement.executeQuery("SELECT * FROM players WHERE fldUUID = 123");
-//
-//                while (result.next()) {
-//                    String note = result.getString("fldNotes");
-//                    msg.info(player, "Note: " + note);
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         return true;
     }
 
     private boolean havePermission(Player player, String permission) {
-        if(player.hasPermission("staffnotes." + permission)) {
+        if (player.hasPermission("staffnotes." + permission)) {
             return true;
         } else {
             msg.noPermission(player);
