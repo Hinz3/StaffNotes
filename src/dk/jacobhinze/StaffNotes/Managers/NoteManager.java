@@ -142,6 +142,49 @@ public class NoteManager {
         }
     }
 
+    public void alert(Player player, Player admin)
+    {
+        UUID playerUUID = player.getUniqueId();
+
+        try
+        {
+            ResultSet result = statement.executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
+
+            if (result.next()) {
+                msg.alert(admin, player.getDisplayName() + " seems to have staff notes. The most recent is displayed.");
+
+                String note = result.getString("fldNote");
+                UUID adminUUID = UUID.fromString(result.getString("fldAdmin"));
+                Timestamp timestamp = result.getTimestamp("fldTimeStamp");
+                OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
+
+                admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + note);
+                admin.sendMessage(ChatColor.YELLOW + "This note was created " + timestamp + " and was made by: " + madeNote);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public boolean hasNote(Player player) {
+        UUID playerUUID = player.getUniqueId();
+
+        try {
+            ResultSet result = statement.executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
+
+            if (result.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     /**
      * Check if a offline player have played before
      *

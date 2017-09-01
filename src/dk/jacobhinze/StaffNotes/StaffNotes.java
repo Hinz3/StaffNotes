@@ -9,21 +9,26 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by Jacob on 23-12-2016.
  */
-public class StaffNotes extends JavaPlugin {
-
+public class StaffNotes extends JavaPlugin implements Listener{
     private Connection connection;
     private String host, username, password, database;
     private int port;
     private Statement statement;
     private MessageManager msg = new MessageManager();
+    private NoteManager noteManager;
+    private ArrayList<Player> staff = new ArrayList();
 
     @Override
     public void onEnable() {
@@ -47,16 +52,20 @@ public class StaffNotes extends JavaPlugin {
                     "`fldTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1\n;");
 
+
+            noteManager = new NoteManager(statement, msg);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(this, this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        NoteManager noteManager = new NoteManager(statement, msg);
 
         if (!(sender instanceof Player)) {
             msg.error(sender, "Only players can use this Staff Notes!");
@@ -162,6 +171,30 @@ public class StaffNotes extends JavaPlugin {
         } else {
             msg.noPermission(player);
             return false;
+        }
+    }
+
+    public void onJoinEvent(PlayerJoinEvent e)
+    {
+        Player player = e.getPlayer();
+
+        if(noteManager.hasNote(player)) {
+            getStaff();
+
+            for (Player admin : staff) {
+                noteManager.alert(player, admin);
+            }
+        }
+    }
+
+    private void getStaff()
+    {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            if (player.hasPermission("staffnotes.alert"))
+            {
+                staff.add(player);
+            }
         }
     }
 
