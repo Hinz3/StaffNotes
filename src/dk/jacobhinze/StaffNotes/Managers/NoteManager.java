@@ -42,7 +42,7 @@ public class NoteManager {
             try {
                 statement.executeUpdate("INSERT INTO players (fldUUID, fldNote, fldAdmin, fldTimeStamp) " +
                         "VALUES ('" + targetUUID + "', '" + note + "', '" + adminUUID + "', '" + timestamp + "')");
-                msg.good(admin, target.getName() + " note have been added to the database!");
+                msg.good(admin, target.getName() + " note have been added!");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -76,7 +76,7 @@ public class NoteManager {
 
                         OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
 
-                        admin.sendMessage(ChatColor.GOLD + "-----------------------------------------------------");
+                        admin.sendMessage(ChatColor.GOLD + "---------------------------------------------");
                         admin.sendMessage(ChatColor.GOLD + "Note ID: " + ChatColor.YELLOW + id);
                         admin.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.YELLOW + target.getName());
                         admin.sendMessage(ChatColor.GOLD + "Note Added By: " + ChatColor.YELLOW + madeNote.getName());

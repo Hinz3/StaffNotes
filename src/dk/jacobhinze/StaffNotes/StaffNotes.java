@@ -151,12 +151,12 @@ public class StaffNotes extends JavaPlugin implements Listener{
                 if (havePermission(player, "info")) {
                     PluginDescriptionFile pdf = this.getDescription();
 
-                    player.sendMessage(ChatColor.GOLD + "-----------------------------------------------------");
+                    player.sendMessage(ChatColor.GOLD + "---------------------------------------------");
                     player.sendMessage(ChatColor.GOLD + "Name: " + ChatColor.YELLOW + "Staff Notes");
                     player.sendMessage(ChatColor.GOLD + "Version: " + ChatColor.YELLOW + pdf.getVersion());
                     player.sendMessage(ChatColor.GOLD + "Author: " + ChatColor.YELLOW + "shadow5353");
                     player.sendMessage(ChatColor.GOLD + "Description: " + ChatColor.YELLOW + pdf.getDescription());
-                    player.sendMessage(ChatColor.GOLD + "-----------------------------------------------------");
+                    player.sendMessage(ChatColor.GOLD + "---------------------------------------------");
                 }
                 return true;
             }
