@@ -1,13 +1,16 @@
-#Saving type (mysql/file)
+# Sends alert for staff members when a player join (true/false)
+alert: true
+
+# Saving type (mysql/file)
 savingType: file
 
 # Flat file setup
 filename: staffnotes.yml
 
 # MySQL setup
-
-host: localhost
-username: root
-password: root
-database: StaffNotes
-port: 3306
+mysql:
+   host: localhost
+   username: root
+   password: root
+   database: StaffNotes
+   port: 3306

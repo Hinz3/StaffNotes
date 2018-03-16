@@ -1,6 +1,5 @@
 package dk.jacobhinze.StaffNotes.Commands;
 
-import dk.jacobhinze.StaffNotes.Managers.MessageManager;
 import dk.jacobhinze.StaffNotes.StaffNotes;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,6 +24,6 @@ public class Info extends StaffCommand{
     }
 
     public Info() {
-        super("Show information about the plugin!", "","i");
+        super("Show information about the plugin!", "","info");
     }
 }

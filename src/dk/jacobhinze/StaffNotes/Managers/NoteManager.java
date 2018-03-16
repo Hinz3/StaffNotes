@@ -18,12 +18,15 @@ import java.util.UUID;
  */
 public class NoteManager {
     private Statement statement;
-    private MessageManager msg;
+    private MessageManager msg = new MessageManager();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    public NoteManager(Statement statement, MessageManager messageManager) {
+    public NoteManager() {
+
+    }
+
+    public NoteManager(Statement statement) {
         this.statement = statement;
-        this.msg = messageManager;
     }
 
     /**

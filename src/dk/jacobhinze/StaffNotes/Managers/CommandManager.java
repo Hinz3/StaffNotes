@@ -1,6 +1,9 @@
 package dk.jacobhinze.StaffNotes.Managers;
 
+import dk.jacobhinze.StaffNotes.Commands.Add;
+import dk.jacobhinze.StaffNotes.Commands.Info;
 import dk.jacobhinze.StaffNotes.Commands.StaffCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,7 +19,8 @@ public class CommandManager implements CommandExecutor {
     private ArrayList<StaffCommand> cmds = new ArrayList<StaffCommand>();
 
     public CommandManager() {
-
+        cmds.add(new Info());
+        cmds.add(new Add());
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -29,7 +33,10 @@ public class CommandManager implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("staffnotes")) {
             if (args.length == 0) {
-                for (StaffCommand mc : cmds) message.info(p, "/staffnotes " + aliases(mc) + " " + mc.getUsage() + " - " + mc.getMessage());
+                p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
+                message.command(p, "/sn" + ChatColor.BLACK + " : " + ChatColor.YELLOW + "Show a list of commands");
+                for (StaffCommand mc : cmds) message.command(p, "/sn " + aliases(mc) + " " + mc.getUsage() + ChatColor.BLACK + " : " + ChatColor.YELLOW + mc.getMessage());
+                p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
                 return true;
             }
 
