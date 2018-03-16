@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,30 +35,34 @@ public class StaffNotes extends JavaPlugin implements Listener{
     public void onEnable() {
         saveDefaultConfig();
 
-        host = getConfig().getString("host");
-        username = getConfig().getString("username");
-        password = getConfig().getString("password");
-        database = getConfig().getString("database");
-        port = getConfig().getInt("port");
+        if (getConfig().get("savingType") == "mysql") {
+            host = getConfig().getString("host");
+            username = getConfig().getString("username");
+            password = getConfig().getString("password");
+            database = getConfig().getString("database");
+            port = getConfig().getInt("port");
 
-        try {
-            openConnection();
-            statement = connection.createStatement();
+            try {
+                openConnection();
+                statement = connection.createStatement();
 
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `players` (" +
-                    "`fldID` int(255) NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-                    "`fldUUID` varchar(255) NOT NULL," +
-                    "`fldNote` text CHARACTER SET utf16 COLLATE utf16_danish_ci NOT NULL," +
-                    "`fldAdmin` varchar(255) NOT NULL," +
-                    "`fldTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
-                    ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1\n;");
+                statement.executeUpdate("CREATE TABLE IF NOT EXISTS `players` (" +
+                        "`fldID` int(255) NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+                        "`fldUUID` varchar(255) NOT NULL," +
+                        "`fldNote` text CHARACTER SET utf16 COLLATE utf16_danish_ci NOT NULL," +
+                        "`fldAdmin` varchar(255) NOT NULL," +
+                        "`fldTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+                        ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1\n;");
 
 
-            noteManager = new NoteManager(statement, msg);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
+                noteManager = new NoteManager(statement, msg);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (getConfig().get("savingType") == "file") {
+
         }
 
         PluginManager pm = getServer().getPluginManager();
@@ -147,8 +152,8 @@ public class StaffNotes extends JavaPlugin implements Listener{
                 return true;
             }
 
-            if (args[0].equalsIgnoreCase("info")) {
-                if (havePermission(player, "info")) {
+            if (args[0].equalsIgnoreCase("Info")) {
+                if (havePermission(player, "Info")) {
                     PluginDescriptionFile pdf = this.getDescription();
 
                     player.sendMessage(ChatColor.GOLD + "---------------------------------------------");
@@ -201,6 +206,10 @@ public class StaffNotes extends JavaPlugin implements Listener{
     @Override
     public void onDisable() {
 
+    }
+
+    public static Plugin getPlugin() {
+        return Bukkit.getServer().getPluginManager().getPlugin("StaffNotes");
     }
 
     public void openConnection() throws SQLException, ClassNotFoundException {

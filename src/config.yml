@@ -1,3 +1,9 @@
+#Saving type (mysql/file)
+savingType: file
+
+# Flat file setup
+filename: staffnotes.yml
+
 # MySQL setup
 
 host: localhost
