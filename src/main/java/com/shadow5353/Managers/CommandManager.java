@@ -28,7 +28,7 @@ public class CommandManager implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
-            message.error(sender, "Only players can use StaffNotes!");
+            message.error(sender, "Only players can use Staff Notes!");
             return true;
         }
 

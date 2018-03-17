@@ -18,7 +18,7 @@ public class RegisterStaffJoin implements Listener {
         if (player.hasPermission("staffnote.staff")) {
             StaffNotes.addStaff(player);
 
-            if (StaffNotes.getPlugin().getConfig().get("alert") == "true") {
+            if (StaffNotes.getPlugin().getConfig().get("alert").equals("true")) {
                 message.info(player, "You get this message to inform you are staff on this server and will recive staff notes alerts when players join!");
             }
         }
