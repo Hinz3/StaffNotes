@@ -22,9 +22,9 @@ public class Remove extends StaffCommand {
             if (!(args.length == 2)) {
                 message.error(p, "Usage: " + ChatColor.GOLD + "/sn remove <Player> <ID>");
             } else {
-                OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
-                int noteID = Integer.parseInt(args[2]);
+                int noteID = Integer.parseInt(args[1]);
 
                 noteManager.removeNote(target, p, noteID);
             }
