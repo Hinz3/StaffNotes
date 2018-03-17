@@ -1,5 +1,7 @@
 package com.shadow5353.Managers;
 
+import com.shadow5353.MySQL;
+import com.shadow5353.StaffNotes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -16,16 +18,18 @@ import java.util.UUID;
  * Created by Jacob on 24-12-2016.
  */
 public class NoteManager {
-    private Statement statement;
     private MessageManager msg = new MessageManager();
+    private MySQL mySQL = new MySQL();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    public NoteManager() {
+    public NoteManager() {}
 
+    private boolean hasMySQLSave() {
+        return StaffNotes.getPlugin().getConfig().get("savingType") == "mysql";
     }
 
-    public NoteManager(Statement statement) {
-        this.statement = statement;
+    private boolean hasFileSave() {
+        return StaffNotes.getPlugin().getConfig().get("savingType") == "file";
     }
 
     /**
@@ -41,12 +45,16 @@ public class NoteManager {
             UUID adminUUID = admin.getUniqueId();
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-            try {
-                statement.executeUpdate("INSERT INTO players (fldUUID, fldNote, fldAdmin, fldTimeStamp) " +
-                        "VALUES ('" + targetUUID + "', '" + note + "', '" + adminUUID + "', '" + timestamp + "')");
-                msg.good(admin, target.getName() + " note have been added!");
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (hasMySQLSave()) {
+                try {
+                    mySQL.getStatement().executeUpdate("INSERT INTO players (fldUUID, fldNote, fldAdmin, fldTimeStamp) " +
+                            "VALUES ('" + targetUUID + "', '" + note + "', '" + adminUUID + "', '" + timestamp + "')");
+                    msg.good(admin, target.getName() + " note have been added!");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else if (hasFileSave()) {
+
             }
         }
     }
@@ -61,34 +69,39 @@ public class NoteManager {
         if (playedBefore(target, admin)) {
             UUID targetUUID = target.getUniqueId();
 
-            try {
-                ResultSet result = statement.executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
+            if (hasMySQLSave()) {
 
-                if (!result.next()) {
-                    msg.error(admin, target.getName() + " do not have any notes!");
-                } else {
+                try {
+                    ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
 
-                    msg.info(admin, "Here is the list of notes on " + target.getName() + "!");
+                    if (!result.next()) {
+                        msg.error(admin, target.getName() + " do not have any notes!");
+                    } else {
 
-                    do {
-                        int id = result.getInt("fldID");
-                        String note = result.getString("fldNote");
-                        UUID adminUUID = UUID.fromString(result.getString("fldAdmin"));
-                        Timestamp timestamp = result.getTimestamp("fldTimeStamp");
+                        msg.info(admin, "Here is the list of notes on " + target.getName() + "!");
 
-                        OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
+                        do {
+                            int id = result.getInt("fldID");
+                            String note = result.getString("fldNote");
+                            UUID adminUUID = UUID.fromString(result.getString("fldAdmin"));
+                            Timestamp timestamp = result.getTimestamp("fldTimeStamp");
 
-                        admin.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-                        admin.sendMessage(ChatColor.GOLD + "Note ID: " + ChatColor.YELLOW + id);
-                        admin.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.YELLOW + target.getName());
-                        admin.sendMessage(ChatColor.GOLD + "Note Added By: " + ChatColor.YELLOW + madeNote.getName());
-                        admin.sendMessage(ChatColor.GOLD + "Date Added: " + ChatColor.YELLOW + sdf.format(timestamp));
-                        admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + note);
-                    } while (result.next());
+                            OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
+
+                            admin.sendMessage(ChatColor.GOLD + "---------------------------------------------");
+                            admin.sendMessage(ChatColor.GOLD + "Note ID: " + ChatColor.YELLOW + id);
+                            admin.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.YELLOW + target.getName());
+                            admin.sendMessage(ChatColor.GOLD + "Note Added By: " + ChatColor.YELLOW + madeNote.getName());
+                            admin.sendMessage(ChatColor.GOLD + "Date Added: " + ChatColor.YELLOW + sdf.format(timestamp));
+                            admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + note);
+                        } while (result.next());
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
+            } else if (hasFileSave()) {
 
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -103,17 +116,23 @@ public class NoteManager {
     public void removeNote(OfflinePlayer target, Player admin, int noteID) {
         if (playedBefore(target, admin)) {
             UUID targetUUID = target.getUniqueId();
-            try {
-                ResultSet result = statement.executeQuery("SELECT * FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
 
-                if (!result.next()) {
-                    msg.error(admin, "This note do not exists on " + target.getName() + "!");
-                } else {
-                    statement.executeUpdate("DELETE FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
-                    msg.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
+            if (hasMySQLSave()) {
+
+                try {
+                    ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
+
+                    if (!result.next()) {
+                        msg.error(admin, "This note do not exists on " + target.getName() + "!");
+                    } else {
+                        mySQL.getStatement().executeUpdate("DELETE FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
+                        msg.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else if (hasFileSave()) {
+
             }
         }
     }
@@ -128,18 +147,23 @@ public class NoteManager {
         if (playedBefore(target, admin)) {
             UUID targetUUID = target.getUniqueId();
 
-            try {
-                ResultSet result = statement.executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
+            if (hasMySQLSave()) {
 
-                if (!result.next()) {
-                    msg.error(admin, target.getName() + " do not have any notes!");
-                } else {
-                    statement.executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
+                try {
+                    ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
 
-                    msg.good(admin, "All notes have been removed from " + target.getName() + "!");
+                    if (!result.next()) {
+                        msg.error(admin, target.getName() + " do not have any notes!");
+                    } else {
+                        mySQL.getStatement().executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
+
+                        msg.good(admin, "All notes have been removed from " + target.getName() + "!");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } else if (hasFileSave()) {
+
             }
         }
     }
@@ -148,40 +172,49 @@ public class NoteManager {
     {
         UUID playerUUID = player.getUniqueId();
 
-        try
-        {
-            ResultSet result = statement.executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
+        if (hasMySQLSave()) {
 
-            if (result.next()) {
-                msg.alert(admin, player.getDisplayName() + " seems to have staff notes. The most recent is displayed.");
+            try {
+                ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
 
-                String note = result.getString("fldNote");
-                UUID adminUUID = UUID.fromString(result.getString("fldAdmin"));
-                Timestamp timestamp = result.getTimestamp("fldTimeStamp");
-                OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
+                if (result.next()) {
+                    msg.alert(admin, player.getDisplayName() + " seems to have staff notes. The most recent is displayed.");
 
-                admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + note);
-                admin.sendMessage(ChatColor.YELLOW + "This note was created " + timestamp + " and was made by: " + madeNote);
+                    String note = result.getString("fldNote");
+                    UUID adminUUID = UUID.fromString(result.getString("fldAdmin"));
+                    Timestamp timestamp = result.getTimestamp("fldTimeStamp");
+                    OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
+
+                    admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + note);
+                    admin.sendMessage(ChatColor.YELLOW + "This note was created " + timestamp + " and was made by: " + madeNote);
+                }
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
+        } else if (hasFileSave()) {
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
     }
 
     public boolean hasNote(Player player) {
         UUID playerUUID = player.getUniqueId();
 
-        try {
-            ResultSet result = statement.executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
+        if (hasMySQLSave()) {
 
-            if (result.next()) {
-                return true;
-            } else {
-                return false;
+            try {
+                ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
+
+                if (result.next()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else if (hasFileSave()) {
+
         }
 
         return false;
