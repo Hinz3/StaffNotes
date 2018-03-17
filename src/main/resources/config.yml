@@ -12,5 +12,5 @@ mysql:
    host: localhost
    username: root
    password: root
-   database: com.shadow5353.StaffNotes
+   database: StaffNotes
    port: 3306

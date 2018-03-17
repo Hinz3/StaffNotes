@@ -1,6 +1,6 @@
-name: com.shadow5353.StaffNotes
+name: StaffNotes
 version: 1.1
-main: dk.jacobhinze.com.shadow5353.StaffNotes.com.shadow5353.StaffNotes
+main: com.shadow5353.StaffNotes
 description: Make notes on players for other staff members
 
 commands:
