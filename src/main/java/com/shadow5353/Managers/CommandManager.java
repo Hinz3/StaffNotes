@@ -2,6 +2,7 @@ package com.shadow5353.Managers;
 
 import com.shadow5353.Commands.Add;
 import com.shadow5353.Commands.Info;
+import com.shadow5353.Commands.Reload;
 import com.shadow5353.Commands.StaffCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,6 +22,7 @@ public class CommandManager implements CommandExecutor {
     public CommandManager() {
         cmds.add(new Info());
         cmds.add(new Add());
+        cmds.add(new Reload());
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
