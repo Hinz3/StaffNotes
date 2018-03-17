@@ -7,10 +7,10 @@ savingType: file
 # Flat file setup
 filename: staffnotes.yml
 
-# com.shadow5353.MySQL setup
+# MySQL setup
 mysql:
    host: localhost
    username: root
    password: root
-   database: StaffNotes
+   database: staffnotes
    port: 3306

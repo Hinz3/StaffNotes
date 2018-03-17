@@ -213,8 +213,6 @@ public class NoteManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        } else if (hasFileSave()) {
-
         }
 
         return false;

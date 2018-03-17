@@ -1,5 +1,7 @@
 package com.shadow5353;
 
+import org.bukkit.Bukkit;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -42,6 +44,8 @@ public class MySQL {
                     "`fldAdmin` varchar(255) NOT NULL," +
                     "`fldTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1\n;");
+
+            Bukkit.getConsoleSender().sendMessage("Table have been added!");
         } catch (SQLException e) {
             e.printStackTrace();
         }

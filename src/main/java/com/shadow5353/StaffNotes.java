@@ -32,12 +32,14 @@ public class StaffNotes extends JavaPlugin implements Listener{
 
         saveDefaultConfig();
 
-        if (getConfig().get("savingType") == "mysql") {
+        if (getConfig().get("savingType").equals("mysql")) {
+            Bukkit.getConsoleSender().sendMessage("Starting inserting tables!");
             MySQL mySQL = new MySQL();
 
             mySQL.startUp();
+            Bukkit.getConsoleSender().sendMessage("Done adding tables!");
         } else if (getConfig().get("savingType") == "file") {
-
+            Bukkit.getConsoleSender().sendMessage("Using file saving!");
         }
 
         PluginManager pm = getServer().getPluginManager();
