@@ -222,14 +222,14 @@ public class NoteManager {
         if (hasMySQLSave()) {
 
             try {
-                mySQL.getStatement().executeQuery("DROP TABLE players");
+                mySQL.getStatement().executeUpdate("DROP TABLE players");
 
                 mySQL.startUp();
+
+                msg.good(player, "Staff Notes have been reset!");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            msg.good(player, "Staff Notes have been reset!");
         } else if (hasFileSave()) {
             // TODO reset
         }
