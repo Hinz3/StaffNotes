@@ -35,5 +35,5 @@ Reload the server and enjoy!
 - [ ] Add GUI with players heads if they have a not.
 
 ## Useful Links:
-- [Jenkins](http://jenkins.shadow5353.com/)
+- [Jenkins](http://jenkins.shadow5353.com:8081)
 - [Spigot Page](https://www.spigotmc.org/resources/staff-notes.33671/)
