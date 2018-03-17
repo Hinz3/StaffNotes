@@ -25,11 +25,11 @@ public class NoteManager {
     public NoteManager() {}
 
     private boolean hasMySQLSave() {
-        return StaffNotes.getPlugin().getConfig().get("savingType") == "mysql";
+        return StaffNotes.getPlugin().getConfig().get("savingType").equals("mysql");
     }
 
     private boolean hasFileSave() {
-        return StaffNotes.getPlugin().getConfig().get("savingType") == "file";
+        return StaffNotes.getPlugin().getConfig().get("savingType").equals("file");
     }
 
     /**

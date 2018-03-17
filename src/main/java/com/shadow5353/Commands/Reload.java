@@ -21,6 +21,6 @@ public class Reload extends StaffCommand {
     }
 
     public Reload() {
-        super("Reload the config.yml","","reload");
+        super("Reload the config","","reload");
     }
 }

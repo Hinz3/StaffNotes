@@ -17,8 +17,8 @@ public class Info extends StaffCommand{
             player.sendMessage(ChatColor.GOLD + "Version: " + ChatColor.YELLOW + pdf.getVersion());
             player.sendMessage(ChatColor.GOLD + "Author: " + ChatColor.YELLOW + "shadow5353");
             player.sendMessage(ChatColor.GOLD + "Description: " + ChatColor.YELLOW + pdf.getDescription());
-            player.sendMessage(ChatColor.GOLD + "Website: " + ChatColor.YELLOW + "https://shadow5353.com/plugins/staffnotes/");
-            player.sendMessage(ChatColor.GOLD + "Jenkins: " + ChatColor.YELLOW + "http://dev.shadow5353.com/staffnotes/");
+//            player.sendMessage(ChatColor.GOLD + "Website: " + ChatColor.YELLOW + "https://shadow5353.com/plugins/staffnotes/");
+            player.sendMessage(ChatColor.GOLD + "Jenkins: " + ChatColor.YELLOW + "http://jenkins.shadow5353.com:8081");
             player.sendMessage(ChatColor.GOLD + "---------------------------------------------");
         }
     }

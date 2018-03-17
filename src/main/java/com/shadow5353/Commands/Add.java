@@ -31,10 +31,6 @@ public class Add extends StaffCommand {
 
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
-                message.info(p, "Player: " + p.getDisplayName());
-                message.info(p, "Target: " + target.getName());
-                message.info(p, "Note: " + note);
-
                 noteManager.addNote(target, p, note);
             }
         }

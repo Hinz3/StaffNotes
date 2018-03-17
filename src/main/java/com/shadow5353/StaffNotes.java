@@ -47,6 +47,8 @@ public class StaffNotes extends JavaPlugin implements Listener{
         pm.registerEvents(new RegisterStaffJoin(), this);
     }
 
+
+
     public static Plugin getPlugin() {
         return Bukkit.getServer().getPluginManager().getPlugin("StaffNotes");
     }
