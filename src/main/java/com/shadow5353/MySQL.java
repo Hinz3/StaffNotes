@@ -45,7 +45,6 @@ public class MySQL {
                     "`fldTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
                     ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1\n;");
 
-            Bukkit.getConsoleSender().sendMessage("Table have been added!");
         } catch (SQLException e) {
             e.printStackTrace();
         }

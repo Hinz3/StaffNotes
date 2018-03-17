@@ -49,7 +49,7 @@ public class NoteManager {
                 try {
                     mySQL.getStatement().executeUpdate("INSERT INTO players (fldUUID, fldNote, fldAdmin, fldTimeStamp) " +
                             "VALUES ('" + targetUUID + "', '" + note + "', '" + adminUUID + "', '" + timestamp + "')");
-                    msg.good(admin, target.getName() + " note have been added!");
+                    msg.good(admin, "Note on " + target.getName() + " have been added!");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -216,6 +216,23 @@ public class NoteManager {
         }
 
         return false;
+    }
+
+    public void reset(Player player) {
+        if (hasMySQLSave()) {
+
+            try {
+                mySQL.getStatement().executeQuery("DROP TABLE players");
+
+                mySQL.startUp();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            msg.good(player, "Staff Notes have been reset!");
+        } else if (hasFileSave()) {
+            // TODO reset
+        }
     }
 
     /**
