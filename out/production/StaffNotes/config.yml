@@ -1,7 +1,0 @@
-# MySQL setup
-
-host: localhost
-username: root
-password: root
-database: StaffNotes
-port: 3306

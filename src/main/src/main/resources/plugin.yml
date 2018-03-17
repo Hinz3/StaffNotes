@@ -1,0 +1,10 @@
+name: com.shadow5353.StaffNotes
+version: 1.1
+main: dk.jacobhinze.com.shadow5353.StaffNotes.com.shadow5353.StaffNotes
+description: Make notes on players for other staff members
+
+commands:
+    staffnotes:
+        usage: /<command>
+        description: Main Command
+        aliases: [sn, staffnote]

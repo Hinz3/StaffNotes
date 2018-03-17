@@ -1,0 +1,16 @@
+# Sends alert for staff members when a player join (true/false)
+alert: true
+
+# Saving type (mysql/file)
+savingType: file
+
+# Flat file setup
+filename: staffnotes.yml
+
+# com.shadow5353.MySQL setup
+mysql:
+   host: localhost
+   username: root
+   password: root
+   database: com.shadow5353.StaffNotes
+   port: 3306
