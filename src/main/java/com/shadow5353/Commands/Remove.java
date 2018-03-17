@@ -19,7 +19,7 @@ public class Remove extends StaffCommand {
         if (!(p.hasPermission("staffnotes.remove"))) {
             message.noPermission(p);
         } else {
-            if (args.length == 2) {
+            if (!(args.length == 2)) {
                 message.error(p, "Usage: " + ChatColor.GOLD + "/sn remove <Player> <ID>");
             } else {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
