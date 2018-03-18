@@ -25,7 +25,7 @@ public class FlatSaving {
 
         notes.clear();
 
-        for (String key : SettingsManager.getNotes().<ConfigurationSection>get("notes").getKeys(true)) {
+        for (String key : SettingsManager.getNotes().<ConfigurationSection>get("notes").getKeys(false)) {
             notes.add(new Note(Integer.parseInt(key)));
         }
     }
