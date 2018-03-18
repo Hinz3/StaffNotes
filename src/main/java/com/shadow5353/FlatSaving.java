@@ -43,7 +43,7 @@ public class FlatSaving {
         SettingsManager.getNotes().set("notes." + id + ".playerUUID", playerUUID.toString());
         SettingsManager.getNotes().set("notes." + id + ".adminUUID", adminUUID.toString());
 
-        notes.add(new Note(id));
+        setupNotes();
     }
 
     public Note getNote(int id) {
@@ -57,6 +57,8 @@ public class FlatSaving {
             found = true;
 
             SettingsManager.getNotes().removePath("notes." + id);
+
+            setupNotes();
         }
 
         return found;
@@ -73,11 +75,14 @@ public class FlatSaving {
             }
         }
 
+        setupNotes();
+
         return found;
     }
 
-    public boolean reset() {
-        return SettingsManager.getNotes().removePath("notes");
+    public void reset() {
+        SettingsManager.getNotes().removePath("notes");
+        setupNotes();
     }
 
     public boolean hasNote(UUID playerUUID) {
