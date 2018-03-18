@@ -7,6 +7,7 @@ import com.shadow5353.StaffNotes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class NoteManager {
     private MessageManager msg = new MessageManager();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private FileConfiguration config = StaffNotes.getPlugin().getConfig();
 
     public NoteManager() {}
 
@@ -178,6 +180,9 @@ public class NoteManager {
         if (playedBefore(target, admin)) {
             UUID targetUUID = target.getUniqueId();
 
+            String successMessage = config.get("messages.remove-all.success").toString();
+            String errorMessage = config.get("messages.remove-all-error").toString();
+
             if (hasMySQLSave()) {
 
                 try {
@@ -188,14 +193,14 @@ public class NoteManager {
                     } else {
                         MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
 
-                        msg.good(admin, "All notes have been removed from " + target.getName() + "!");
+                        msg.good(admin, successMessage.replace("[PLAYER]", target.getName()));
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 if (FlatSaving.getInstance().removeAllNotes(targetUUID)) {
-                    msg.good(admin, "All notes have been removed from " + target.getName() + "!");
+                    msg.good(admin, successMessage.replace("[PLAYER]", target.getName()));
                 } else {
                     msg.error(admin, target.getName() + " do not have any notes!");
                 }
