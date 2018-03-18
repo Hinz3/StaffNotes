@@ -34,7 +34,7 @@ public class StaffNotes extends JavaPlugin implements Listener{
 
         if (getConfig().get("savingType").equals("mysql")) {
             MySQL.getInstance().startUp();
-        } else if (getConfig().get("savingType") == "file") {
+        } else if (getConfig().get("savingType").equals("file")) {
             FlatSaving.getInstance().setupNotes();
         }
 

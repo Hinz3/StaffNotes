@@ -154,7 +154,11 @@ public class NoteManager {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
-
+                if (FlatSaving.getInstance().removeNote(targetUUID, noteID)) {
+                    msg.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
+                } else {
+                    msg.error(admin, "This note do not exists on " + target.getName() + "!");
+                }
             }
         }
     }
@@ -185,7 +189,11 @@ public class NoteManager {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
-
+                if (FlatSaving.getInstance().removeAllNotes(targetUUID)) {
+                    msg.good(admin, "All notes have been removed from " + target.getName() + "!");
+                } else {
+                    msg.error(admin, target.getName() + " do not have any notes!");
+                }
             }
         }
     }
@@ -235,8 +243,9 @@ public class NoteManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        } else if (hasFileSave()) {
+            return FlatSaving.getInstance().hasNote(playerUUID);
         }
-
         return false;
     }
 

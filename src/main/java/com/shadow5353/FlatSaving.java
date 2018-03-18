@@ -45,4 +45,28 @@ public class FlatSaving {
 
         notes.add(new Note(id));
     }
+
+    public boolean removeNote(UUID playerUUID, int id) {
+
+        return true;
+
+    }
+
+    public boolean removeAllNotes(UUID playerUUID) {
+        return true;
+    }
+
+    public boolean reset() {
+        return true;
+    }
+
+    public boolean hasNote(UUID playerUUID) {
+
+        for (Note note : getNotes()) {
+            if (playerUUID.equals(note.getPlayerUUID())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
