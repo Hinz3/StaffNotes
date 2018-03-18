@@ -181,7 +181,7 @@ public class NoteManager {
             UUID targetUUID = target.getUniqueId();
 
             String successMessage = config.get("messages.remove-all.success").toString();
-            String errorMessage = config.get("messages.remove-all-error").toString();
+            String errorMessage = config.get("messages.remove-all.error").toString();
 
             if (hasMySQLSave()) {
 
