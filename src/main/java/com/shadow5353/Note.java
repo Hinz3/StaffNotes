@@ -17,8 +17,8 @@ public class Note {
 
         this.note = SettingsManager.getNotes().get("notes." + id + ".note");
         this.date = SettingsManager.getNotes().get("notes." + id + ".date");
-        this.playerUUID = SettingsManager.getNotes().get("notes." + id + ".playerUUID");
-        this.adminUUID = SettingsManager.getNotes().get("notes." + id + ".adminUUID");
+        this.playerUUID = UUID.fromString(SettingsManager.getNotes().get("notes." + id + ".playerUUID").toString());
+        this.adminUUID = UUID.fromString(SettingsManager.getNotes().get("notes." + id + ".adminUUID").toString());
     }
 
     public int getId() {

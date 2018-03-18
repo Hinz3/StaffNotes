@@ -2,6 +2,7 @@ package com.shadow5353.Managers;
 
 import com.shadow5353.FlatSaving;
 import com.shadow5353.MySQL;
+import com.shadow5353.Note;
 import com.shadow5353.StaffNotes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,7 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -104,7 +107,29 @@ public class NoteManager {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
+                for (Note note : FlatSaving.getInstance().getNotes()) {
+                    if (targetUUID.equals(note.getPlayerUUID())) {
+                        int id = note.getId();
+                        String noteMessage = note.getNote();
+                        UUID adminUUID = UUID.fromString(note.getAdminUUID().toString());
 
+                        try {
+                            Date parsedDate = sdf.parse(note.getDate());
+                            Timestamp timestamp = new Timestamp(parsedDate.getTime());
+
+                            OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
+
+                            admin.sendMessage(ChatColor.GOLD + "---------------------------------------------");
+                            admin.sendMessage(ChatColor.GOLD + "Note ID: " + ChatColor.YELLOW + id);
+                            admin.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.YELLOW + target.getName());
+                            admin.sendMessage(ChatColor.GOLD + "Note Added By: " + ChatColor.YELLOW + madeNote.getName());
+                            admin.sendMessage(ChatColor.GOLD + "Date Added: " + ChatColor.YELLOW + sdf.format(timestamp));
+                            admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + noteMessage);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         }
     }
