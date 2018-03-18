@@ -5,7 +5,7 @@ alert: true
 savingType: file
 
 # Flat file setup
-filename: staffnotes.yml
+filename: staffnotes
 
 # MySQL setup
 mysql:

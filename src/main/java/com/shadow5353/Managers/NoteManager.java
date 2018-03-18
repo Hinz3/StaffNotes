@@ -1,5 +1,6 @@
 package com.shadow5353.Managers;
 
+import com.shadow5353.FlatSaving;
 import com.shadow5353.MySQL;
 import com.shadow5353.StaffNotes;
 import org.bukkit.Bukkit;
@@ -19,7 +20,6 @@ import java.util.UUID;
  */
 public class NoteManager {
     private MessageManager msg = new MessageManager();
-    private MySQL mySQL = new MySQL();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public NoteManager() {}
@@ -47,14 +47,17 @@ public class NoteManager {
 
             if (hasMySQLSave()) {
                 try {
-                    mySQL.getStatement().executeUpdate("INSERT INTO players (fldUUID, fldNote, fldAdmin, fldTimeStamp) " +
+                    MySQL.getInstance().getStatement().executeUpdate("INSERT INTO players (fldUUID, fldNote, fldAdmin, fldTimeStamp) " +
                             "VALUES ('" + targetUUID + "', '" + note + "', '" + adminUUID + "', '" + timestamp + "')");
                     msg.good(admin, "Note on " + target.getName() + " have been added!");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
+                String date = timestamp.toString();
 
+                FlatSaving.getInstance().saveNote(note, targetUUID, adminUUID, date);
+                msg.good(admin, "Note on " + target.getName() + " have been added!");
             }
         }
     }
@@ -72,7 +75,7 @@ public class NoteManager {
             if (hasMySQLSave()) {
 
                 try {
-                    ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
+                    ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
                         msg.error(admin, target.getName() + " do not have any notes!");
@@ -120,12 +123,12 @@ public class NoteManager {
             if (hasMySQLSave()) {
 
                 try {
-                    ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
+                    ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
                         msg.error(admin, "This note do not exists on " + target.getName() + "!");
                     } else {
-                        mySQL.getStatement().executeUpdate("DELETE FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
+                        MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
                         msg.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
                     }
                 } catch (SQLException e) {
@@ -150,12 +153,12 @@ public class NoteManager {
             if (hasMySQLSave()) {
 
                 try {
-                    ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
+                    ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
                         msg.error(admin, target.getName() + " do not have any notes!");
                     } else {
-                        mySQL.getStatement().executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
+                        MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
 
                         msg.good(admin, "All notes have been removed from " + target.getName() + "!");
                     }
@@ -175,7 +178,7 @@ public class NoteManager {
         if (hasMySQLSave()) {
 
             try {
-                ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
+                ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
 
                 if (result.next()) {
                     msg.alert(admin, player.getDisplayName() + " seems to have staff notes. The most recent is displayed.");
@@ -203,7 +206,7 @@ public class NoteManager {
         if (hasMySQLSave()) {
 
             try {
-                ResultSet result = mySQL.getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
+                ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
 
                 if (result.next()) {
                     return true;
@@ -222,9 +225,9 @@ public class NoteManager {
         if (hasMySQLSave()) {
 
             try {
-                mySQL.getStatement().executeUpdate("DROP TABLE players");
+                MySQL.getInstance().getStatement().executeUpdate("DROP TABLE players");
 
-                mySQL.startUp();
+                MySQL.getInstance().startUp();
 
                 msg.good(player, "Staff Notes have been reset!");
             } catch (SQLException e) {

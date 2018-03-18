@@ -33,18 +33,15 @@ public class StaffNotes extends JavaPlugin implements Listener{
         saveDefaultConfig();
 
         if (getConfig().get("savingType").equals("mysql")) {
-            MySQL mySQL = new MySQL();
-
-            mySQL.startUp();
+            MySQL.getInstance().startUp();
         } else if (getConfig().get("savingType") == "file") {
+            FlatSaving.getInstance().setupNotes();
         }
 
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new AlertStaff(), this);
         pm.registerEvents(new RegisterStaffJoin(), this);
     }
-
-
 
     public static Plugin getPlugin() {
         return Bukkit.getServer().getPluginManager().getPlugin("StaffNotes");

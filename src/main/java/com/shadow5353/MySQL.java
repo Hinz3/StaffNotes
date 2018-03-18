@@ -16,7 +16,7 @@ public class MySQL {
     private Statement statement;
     private Connection connection;
 
-    public MySQL() {
+    private MySQL() {
         this.host = StaffNotes.getPlugin().getConfig().get("mysql.host").toString();
         this.username = StaffNotes.getPlugin().getConfig().get("mysql.username").toString();
         this.password = StaffNotes.getPlugin().getConfig().get("mysql.password").toString();
@@ -33,6 +33,12 @@ public class MySQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private static MySQL instance = new MySQL();
+
+    public static MySQL getInstance() {
+        return instance;
     }
 
     public void startUp() {
