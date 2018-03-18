@@ -3,7 +3,6 @@ package com.shadow5353;
 import com.shadow5353.Managers.SettingsManager;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -35,7 +34,7 @@ public class FlatSaving {
         return notes;
     }
 
-    public void saveNote(String note, UUID playerUUID, UUID adminUUID, Timestamp date){
+    public void saveNote(String note, UUID playerUUID, UUID adminUUID, String date){
         int id = getNotes().size() + 1;
 
         SettingsManager.getNotes().createConfigurationSection("notes." + id);

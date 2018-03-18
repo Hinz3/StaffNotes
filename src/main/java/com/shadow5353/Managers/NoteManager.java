@@ -57,8 +57,9 @@ public class NoteManager {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
+                String date = timestamp.toString();
 
-                FlatSaving.getInstance().saveNote(note, targetUUID, adminUUID, timestamp);
+                FlatSaving.getInstance().saveNote(note, targetUUID, adminUUID, date);
                 msg.good(admin, "Note on " + target.getName() + " have been added!");
             }
         }
@@ -111,22 +112,16 @@ public class NoteManager {
                         int id = note.getId();
                         String noteMessage = note.getNote();
                         UUID adminUUID = UUID.fromString(note.getAdminUUID().toString());
+                        Timestamp timestamp = Timestamp.valueOf(note.getDate());
 
-                        try {
-                            Date parsedDate = sdf.parse(note.getDate());
-                            Timestamp timestamp = new Timestamp(parsedDate.getTime());
+                        OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
 
-                            OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
-
-                            admin.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-                            admin.sendMessage(ChatColor.GOLD + "Note ID: " + ChatColor.YELLOW + id);
-                            admin.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.YELLOW + target.getName());
-                            admin.sendMessage(ChatColor.GOLD + "Note Added By: " + ChatColor.YELLOW + madeNote.getName());
-                            admin.sendMessage(ChatColor.GOLD + "Date Added: " + ChatColor.YELLOW + sdf.format(timestamp));
-                            admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + noteMessage);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        admin.sendMessage(ChatColor.GOLD + "---------------------------------------------");
+                        admin.sendMessage(ChatColor.GOLD + "Note ID: " + ChatColor.YELLOW + id);
+                        admin.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.YELLOW + target.getName());
+                        admin.sendMessage(ChatColor.GOLD + "Note Added By: " + ChatColor.YELLOW + madeNote.getName());
+                        admin.sendMessage(ChatColor.GOLD + "Date Added: " + ChatColor.YELLOW + sdf.format(timestamp));
+                        admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + noteMessage);
                     }
                 }
             }
