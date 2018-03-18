@@ -104,8 +104,12 @@ public class NoteManager {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
+                boolean found = false;
+
                 for (Note note : FlatSaving.getInstance().getNotes()) {
                     if (targetUUID.equals(note.getPlayerUUID())) {
+                        found = true;
+
                         int id = note.getId();
                         String noteMessage = note.getNote();
                         UUID adminUUID = UUID.fromString(note.getAdminUUID().toString());
@@ -120,6 +124,10 @@ public class NoteManager {
                         admin.sendMessage(ChatColor.GOLD + "Date Added: " + ChatColor.YELLOW + sdf.format(timestamp));
                         admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + noteMessage);
                     }
+                }
+
+                if (!(found)){
+                    msg.error(admin, "There were no notes found on " + target.getName() + "!");
                 }
             }
         }
