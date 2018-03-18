@@ -57,9 +57,8 @@ public class NoteManager {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
-                String date = timestamp.toString();
 
-                FlatSaving.getInstance().saveNote(note, targetUUID, adminUUID, date);
+                FlatSaving.getInstance().saveNote(note, targetUUID, adminUUID, timestamp);
                 msg.good(admin, "Note on " + target.getName() + " have been added!");
             }
         }
