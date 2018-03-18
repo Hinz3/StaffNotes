@@ -43,6 +43,6 @@ public class FlatSaving {
         SettingsManager.getNotes().set("notes." + id + ".playerUUID", playerUUID.toString());
         SettingsManager.getNotes().set("notes." + id + ".adminUUID", adminUUID.toString());
 
-        setupNotes();
+        notes.add(new Note(id));
     }
 }
