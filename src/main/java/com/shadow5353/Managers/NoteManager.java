@@ -11,11 +11,8 @@ import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -198,35 +195,11 @@ public class NoteManager {
         }
     }
 
-    public void alert(Player player, Player admin)
-    {
-        UUID playerUUID = player.getUniqueId();
-
-        if (hasMySQLSave()) {
-
-            try {
-                ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + playerUUID + "'");
-
-                if (result.next()) {
-                    msg.alert(admin, player.getDisplayName() + " seems to have staff notes. The most recent is displayed.");
-
-                    String note = result.getString("fldNote");
-                    UUID adminUUID = UUID.fromString(result.getString("fldAdmin"));
-                    Timestamp timestamp = result.getTimestamp("fldTimeStamp");
-                    OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
-
-                    admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + note);
-                    admin.sendMessage(ChatColor.YELLOW + "This note was created " + timestamp + " and was made by: " + madeNote);
-                }
-
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        } else if (hasFileSave()) {
-
-        }
-    }
-
+    /**
+     * Check if the player has a note
+     * @param player the player for checking
+     * @return if the player has a note
+     */
     public boolean hasNote(Player player) {
         UUID playerUUID = player.getUniqueId();
 
@@ -249,6 +222,10 @@ public class NoteManager {
         return false;
     }
 
+    /**
+     * Reset the files
+     * @param player
+     */
     public void reset(Player player) {
         if (hasMySQLSave()) {
 
@@ -262,7 +239,9 @@ public class NoteManager {
                 e.printStackTrace();
             }
         } else if (hasFileSave()) {
-            // TODO reset
+            FlatSaving.getInstance().reset();
+
+            msg.good(player, "Staff Notes have been reset!");
         }
     }
 

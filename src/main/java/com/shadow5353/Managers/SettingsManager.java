@@ -48,6 +48,20 @@ public class SettingsManager {
         return cs;
     }
 
+    public boolean removePath(String path) {
+        config.set(path, null);
+
+        try {
+            config.save(file);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T get(String path) {
         return (T) config.get(path);

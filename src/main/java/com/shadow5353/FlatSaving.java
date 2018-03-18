@@ -46,18 +46,38 @@ public class FlatSaving {
         notes.add(new Note(id));
     }
 
-    public boolean removeNote(UUID playerUUID, int id) {
+    public Note getNote(int id) {
+         return new Note(id);
+    }
 
-        return true;
+    public boolean removeNote(UUID playerUUID, int id) {
+        boolean found = false;
+
+        if (getNote(id).getPlayerUUID().equals(playerUUID)) {
+            found = true;
+
+            SettingsManager.getNotes().removePath("notes." + id);
+        }
+
+        return found;
 
     }
 
     public boolean removeAllNotes(UUID playerUUID) {
-        return true;
+        boolean found = false;
+
+        for (Note note : getNotes()) {
+            if (note.getPlayerUUID().equals(playerUUID)) {
+                found = true;
+                SettingsManager.getNotes().removePath("notes." + note.getId());
+            }
+        }
+
+        return found;
     }
 
     public boolean reset() {
-        return true;
+        return SettingsManager.getNotes().removePath("notes");
     }
 
     public boolean hasNote(UUID playerUUID) {

@@ -1,7 +1,5 @@
 package com.shadow5353;
 
-import com.shadow5353.Listeners.AlertStaff;
-import com.shadow5353.Listeners.RegisterStaffJoin;
 import com.shadow5353.Managers.CommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,18 +14,8 @@ import java.util.ArrayList;
  * Created by Jacob on 23-12-2016.
  */
 public class StaffNotes extends JavaPlugin implements Listener{
-    private static ArrayList<Player> staff = new ArrayList();
 
-    public static ArrayList<Player> getStaff() {
-        return staff;
-    }
-
-    public static void addStaff(Player player) {
-        staff.add(player);
-    }
-
-    @Override
-    public void onEnable() {
+    @Override public void onEnable() {
         getCommand("staffnotes").setExecutor(new CommandManager());
 
         saveDefaultConfig();
@@ -37,10 +25,6 @@ public class StaffNotes extends JavaPlugin implements Listener{
         } else if (getConfig().get("savingType").equals("file")) {
             FlatSaving.getInstance().setupNotes();
         }
-
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(new AlertStaff(), this);
-        pm.registerEvents(new RegisterStaffJoin(), this);
     }
 
     public static Plugin getPlugin() {
