@@ -40,8 +40,8 @@ public class FlatSaving {
         SettingsManager.getNotes().createConfigurationSection("notes." + id);
         SettingsManager.getNotes().set("notes." + id + ".note", note);
         SettingsManager.getNotes().set("notes." + id + ".date", date);
-        SettingsManager.getNotes().set("notes." + id + ".playerUUID", playerUUID);
-        SettingsManager.getNotes().set("notes." + id + "adminUUID", adminUUID);
+        SettingsManager.getNotes().set("notes." + id + ".playerUUID", playerUUID.toString());
+        SettingsManager.getNotes().set("notes." + id + ".adminUUID", adminUUID.toString());
 
         setupNotes();
     }
