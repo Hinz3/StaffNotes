@@ -1,30 +1,15 @@
-# Use new container infrastructure to enable caching
-sudo: false
-
-# Use Maven
 language: java
-
-# Caching so the next build will be fast too.
-cache:
-  directories:
-    - $HOME/.m2
-
-# Only re-download spigot if we don't have spigot in the repo
-before_install:
-  - if [ ! -d "$HOME/.m2/repository/org/spigotmc" ]; then ./installSpigot.sh 1.12 ; else echo "Not compiling Spigot because it is already in our maven" ; fi
-
-# Set the final name using pom-fu
 install:
-  - mvn install -DfinalName=release -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-
-# You fill out this section by encrypting the key using the travis utility
-# Note that the api_key is safe to put here because it is actually encrypted
+    - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+script:
+    # grep so that download counts don't appear in log files
+    - java -jar BuildTools.jar | grep -vE "[^/ ]*/[^/ ]*\s*KB\s*$" | grep -v "^\s*$"
+    - find Spigot/Spigot-Server/target/*.jar
 deploy:
-  provider: releases
-  api_key:
-    secure: $GITHUB_OATH_TOKEN
-  file: target/release.jar
-  skip_cleanup: true
-  # Modify this to build on every commit
-  on:
-    tags: true
+    provider: releases
+    api-key: "$GITHUB_OATH_TOKEN"
+    file: target/release.jar
+    skip_cleanup: true
+    on:
+        tags: true
+        all_branches: true 
