@@ -36,4 +36,4 @@ Reload the server and enjoy!
 
 ## Useful Links:
 - [Spigot Page](https://www.spigotmc.org/resources/staff-notes.33671/)
-- [Development Builds](https://jenkins.shadow5353.com/)
+- [Development Builds](https://jenkins.shadow5353.com/job/StaffNotes/)
