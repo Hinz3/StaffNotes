@@ -1,6 +1,7 @@
 package com.shadow5353.Managers;
 
 import com.shadow5353.Commands.*;
+import com.shadow5353.StaffNotes;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
