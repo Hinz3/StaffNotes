@@ -29,7 +29,7 @@ public class CommandManager implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
             String errorMessage = config.get("messages.console-error").toString();
-            message.error(sender, errorMessage.replace("[PLUGIN]", "StaffNotes"]));
+            message.error(sender, errorMessage.replace("[PLUGIN]", "StaffNotes"));
             return true;
         }
 
