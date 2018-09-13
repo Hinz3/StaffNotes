@@ -193,14 +193,14 @@ public class NoteManager {
                     } else {
                         MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
 
-                        msg.good(admin, successMessage.replace("[PLAYER]", target.getName()));
+                        msg.good(admin, successMessage);
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 if (FlatSaving.getInstance().removeAllNotes(targetUUID)) {
-                    msg.good(admin, successMessage.replace("[PLAYER]", target.getName()));
+                    msg.good(admin, successMessage);
                 } else {
                     msg.error(admin, target.getName() + " do not have any notes!");
                 }
