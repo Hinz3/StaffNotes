@@ -19,6 +19,8 @@ mysql:
 # Insert [PLAYER] to display the player name used in the command in the messages.
 # Intert [NOTEID] to display the note ID
 messages:
+
+    console-error: Only players can use [PLUGIN]!
     # The reload message sent
     reload: Config have been reloaded!
 
