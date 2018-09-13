@@ -13,6 +13,7 @@ import java.util.Vector;
 
 public class CommandManager implements CommandExecutor {
     private MessageManager message = new MessageManager();
+    private FileConfiguration config = StaffNotes.getPlugin().getConfig();
 
     private ArrayList<StaffCommand> cmds = new ArrayList<StaffCommand>();
 
