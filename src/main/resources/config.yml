@@ -44,7 +44,7 @@ messages:
     # All the messages sent in /staffnotes show <Player>
     show:
         # Error message if the player do not have any notes
-        error: ""[PLAYER] do not have any notes!"
+        error: "[PLAYER] do not have any notes!"
 
         # The info message before showing all notes
         info: "Here is the list of notes on [PLAYER]!"
