@@ -31,35 +31,40 @@ public class CommandManager implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
-            String errorMessage = config.get("messages.console-error").toString();
-            message.error(sender, errorMessage.replace("[PLUGIN]", "StaffNotes"));
+            message.error(sender, "Only players can use StaffNotes!");
             return true;
         }
 
         Player p = (Player) sender;
 
         if (cmd.getName().equalsIgnoreCase("staffnotes")) {
-            if (args.length == 0) {
-                p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-                message.command(p, "/sn" + ChatColor.BLACK + " : " + ChatColor.YELLOW + "Show a list of commands");
-                for (StaffCommand mc : cmds) message.command(p, "/sn " + aliases(mc) + " " + mc.getUsage() + ChatColor.BLACK + " : " + ChatColor.YELLOW + mc.getMessage());
-                p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-                return true;
+            if (!p.hasPermission("staffnotes.use")) {
+                message.noPermission(p);
+            } else {
+
+                if (args.length == 0) {
+                    p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
+                    message.command(p, "/sn" + ChatColor.BLACK + " : " + ChatColor.YELLOW + "Show a list of commands");
+                    for (StaffCommand mc : cmds)
+                        message.command(p, "/sn " + aliases(mc) + " " + mc.getUsage() + ChatColor.BLACK + " : " + ChatColor.YELLOW + mc.getMessage());
+                    p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
+                    return true;
+                }
+
+                StaffCommand c = getCommand(args[0]);
+
+                if (c == null) {
+                    message.error(p, "That command doesn't exist!");
+                    return true;
+                }
+
+                Vector<String> a = new Vector<String>(Arrays.asList(args));
+                a.remove(0);
+                args = a.toArray(new String[a.size()]);
+
+                c.onCommand(p, args);
+
             }
-
-            StaffCommand c = getCommand(args[0]);
-
-            if (c == null) {
-                message.error(p,"That command doesn't exist!");
-                return true;
-            }
-
-            Vector<String> a = new Vector<String>(Arrays.asList(args));
-            a.remove(0);
-            args = a.toArray(new String[a.size()]);
-
-            c.onCommand(p, args);
-
             return true;
         }
         return true;

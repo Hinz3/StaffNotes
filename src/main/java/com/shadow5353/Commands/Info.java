@@ -1,11 +1,13 @@
 package com.shadow5353.Commands;
 
+import com.shadow5353.Managers.MessageManager;
 import com.shadow5353.StaffNotes;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class Info extends StaffCommand{
+    private MessageManager message = new MessageManager();
 
     @Override
     public void onCommand(Player player, String[] args) {
@@ -20,6 +22,8 @@ public class Info extends StaffCommand{
 //            player.sendMessage(ChatColor.GOLD + "Website: " + ChatColor.YELLOW + "https://shadow5353.com/plugins/staffnotes/");
             player.sendMessage(ChatColor.GOLD + "Jenkins: " + ChatColor.YELLOW + "https://jenkins.shadow5353.com/job/StaffNotes/");
             player.sendMessage(ChatColor.GOLD + "---------------------------------------------");
+        } else {
+            message.noPermission(player);
         }
     }
 

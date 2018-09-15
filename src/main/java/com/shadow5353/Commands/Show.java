@@ -2,9 +2,7 @@ package com.shadow5353.Commands;
 
 import com.shadow5353.Managers.MessageManager;
 import com.shadow5353.Managers.NoteManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 /**
@@ -20,7 +18,7 @@ public class Show extends StaffCommand {
             message.noPermission(p);
         } else {
             if (!(args.length == 1)) {
-                message.error(p, "Usage: " + ChatColor.GOLD + "/staffnotes show [Player]");
+                noteManager.showPlayers(p);
             } else {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 

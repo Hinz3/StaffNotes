@@ -4,27 +4,37 @@ import com.shadow5353.FlatSaving;
 import com.shadow5353.MySQL;
 import com.shadow5353.Note;
 import com.shadow5353.StaffNotes;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
  * Created by Jacob on 24-12-2016.
  */
+class SkullInfo {
+    public String name;
+    public ItemStack skull;
+
+    public SkullInfo(String name, ItemStack skull) {
+        this.name = name;
+        this.skull = skull;
+    }
+}
+
 public class NoteManager {
     private MessageManager msg = new MessageManager();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    private FileConfiguration config = StaffNotes.getPlugin().getConfig();
 
-    public NoteManager() {}
+    public NoteManager() {
+    }
 
     private boolean hasMySQLSave() {
         return StaffNotes.getPlugin().getConfig().get("savingType").equals("mysql");
@@ -62,6 +72,38 @@ public class NoteManager {
                 msg.good(admin, "Note on " + target.getName() + " have been added!");
             }
         }
+    }
+
+    public void showPlayers(Player player) {
+        ArrayList<OfflinePlayer> players = getPlayersWithNotes();
+        ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
+
+        for (OfflinePlayer p : players) {
+            ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
+
+            SkullMeta meta = (SkullMeta) skull.getItemMeta();
+            meta.setOwner(p.getName());
+            meta.setDisplayName(ChatColor.LIGHT_PURPLE + p.getName());
+            skull.setItemMeta(meta);
+
+            skulls.add(new SkullInfo(p.getName(), skull));
+        }
+
+        IconMenu menu = new IconMenu("Players with notes", 36, new IconMenu.OptionClickEventHandler() {
+            public void onOptionClick(IconMenu.OptionClickEvent event) {
+                event.getPlayer().performCommand("sn show " + event.getName());
+                event.setWillClose(true);
+            }
+        }, StaffNotes.getPlugin());
+
+        for (int i = 0; i < skulls.size(); i++) {
+            for (SkullInfo skull : skulls) {
+                menu.setOption(i, skull.skull, skull.name, "Get all notes about " + skull.name);
+            }
+        }
+
+        menu.open(player);
+
     }
 
     /**
@@ -128,7 +170,7 @@ public class NoteManager {
                     }
                 }
 
-                if (!(found)){
+                if (!(found)) {
                     msg.error(admin, "There were no notes found on " + target.getName() + "!");
                 }
             }
@@ -180,9 +222,6 @@ public class NoteManager {
         if (playedBefore(target, admin)) {
             UUID targetUUID = target.getUniqueId();
 
-            String successMessage = config.get("messages.remove-all.success").toString();
-            String errorMessage = config.get("messages.remove-all.error").toString();
-
             if (hasMySQLSave()) {
 
                 try {
@@ -193,14 +232,14 @@ public class NoteManager {
                     } else {
                         MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
 
-                        msg.good(admin, successMessage);
+                        msg.good(admin, "All notes have been removed from " + target.getName() + "!");
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 if (FlatSaving.getInstance().removeAllNotes(targetUUID)) {
-                    msg.good(admin, successMessage);
+                    msg.good(admin, "All notes have been removed from " + target.getName() + "!");
                 } else {
                     msg.error(admin, target.getName() + " do not have any notes!");
                 }
@@ -210,6 +249,7 @@ public class NoteManager {
 
     /**
      * Check if the player has a note
+     *
      * @param player the player for checking
      * @return if the player has a note
      */
@@ -237,6 +277,7 @@ public class NoteManager {
 
     /**
      * Reset the files
+     *
      * @param player
      */
     public void reset(Player player) {
@@ -272,5 +313,33 @@ public class NoteManager {
             msg.error(player, target.getName() + " has never played before on this server!");
             return false;
         }
+    }
+
+    private ArrayList<OfflinePlayer> getPlayersWithNotes() {
+        ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
+
+        if (hasFileSave()) {
+            for (Note note : FlatSaving.getInstance().getNotes()) {
+                UUID playerUUID = note.getPlayerUUID();
+                OfflinePlayer player = Bukkit.getOfflinePlayer(playerUUID);
+                players.add(player);
+            }
+        } else if (hasMySQLSave()) {
+            try {
+                ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players");
+
+                do {
+                    UUID playerUUID = UUID.fromString(result.getString("fldUUID"));
+
+                    OfflinePlayer player = Bukkit.getOfflinePlayer(playerUUID);
+
+                    players.add(player);
+                } while (result.next());
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return players;
     }
 }
