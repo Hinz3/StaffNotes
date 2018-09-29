@@ -11,18 +11,20 @@ public class SettingsManager {
     private File file;
     private FileConfiguration config;
 
-    private static SettingsManager notes = new SettingsManager(StaffNotes.getPlugin().getConfig().get("filename").toString());
+    private static SettingsManager notes = new SettingsManager();
 
     public static SettingsManager getNotes() {
         return notes;
     }
 
-    private SettingsManager(String fileName) {
+    private String filename = "notes";
+
+    public void setup() {
         System.out.println(StaffNotes.getPlugin());
 
         if (!StaffNotes.getPlugin().getDataFolder().exists()) StaffNotes.getPlugin().getDataFolder().mkdir();
 
-        file = new File(StaffNotes.getPlugin().getDataFolder(), fileName + ".yml");
+        file = new File(StaffNotes.getPlugin().getDataFolder(),  filename + ".yml");
 
         if (!file.exists()) {
             try {
@@ -33,6 +35,10 @@ public class SettingsManager {
         }
 
         config = YamlConfiguration.loadConfiguration(file);
+    }
+
+    private SettingsManager() {
+
     }
 
     public void set(String path, Object value) {

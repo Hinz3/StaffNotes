@@ -1,6 +1,9 @@
 # Sends alert for staff members when a player join (true/false)
 alert: true
 
+# Only use this for testing functions of the plugin (true/false)
+debug: false
+
 # Saving type (mysql/file)
 savingType: file
 

@@ -21,6 +21,8 @@ public class FlatSaving {
     private ArrayList<Note> notes = new ArrayList<Note>();
 
     public void setupNotes() {
+        SettingsManager.getNotes().setup();
+
         if (SettingsManager.getNotes().<ConfigurationSection>get("notes") == null) SettingsManager.getNotes().createConfigurationSection("notes");
 
         notes.clear();

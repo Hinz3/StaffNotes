@@ -32,6 +32,7 @@ class SkullInfo {
 public class NoteManager {
     private MessageManager msg = new MessageManager();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private ArrayList<IconMenu> menus = new ArrayList<IconMenu>();
 
     public NoteManager() {
     }
@@ -89,7 +90,7 @@ public class NoteManager {
             skulls.add(new SkullInfo(p.getName(), skull));
         }
 
-        IconMenu menu = new IconMenu("Players with notes", 36, new IconMenu.OptionClickEventHandler() {
+        IconMenu menu = new IconMenu("Players with notes", 54, new IconMenu.OptionClickEventHandler() {
             public void onOptionClick(IconMenu.OptionClickEvent event) {
                 event.getPlayer().performCommand("sn show " + event.getName());
                 event.setWillClose(true);
@@ -104,6 +105,46 @@ public class NoteManager {
 
         menu.open(player);
 
+    }
+
+    private void generateGUIs() {
+        ArrayList<OfflinePlayer> players = getPlayersWithNotes();
+        ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
+
+        for (OfflinePlayer p : players) {
+            ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
+
+            SkullMeta meta = (SkullMeta) skull.getItemMeta();
+            meta.setOwner(p.getName());
+            meta.setDisplayName(ChatColor.LIGHT_PURPLE + p.getName());
+            skull.setItemMeta(meta);
+
+            skulls.add(new SkullInfo(p.getName(), skull));
+        }
+
+        boolean done = false;
+
+        do {
+            if (skulls.size() < 45) {
+                IconMenu menu = new IconMenu("Players with notes", 54, new IconMenu.OptionClickEventHandler() {
+                    public void onOptionClick(IconMenu.OptionClickEvent event) {
+                        event.getPlayer().performCommand("sn show " + event.getName());
+                        event.setWillClose(true);
+                    }
+                }, StaffNotes.getPlugin());
+
+                for (int i = 0; i < 45; i++) {
+                    for (SkullInfo skull : skulls) {
+                        menu.setOption(i, skull.skull, skull.name, "All notes about " + skull.name);
+                        skulls.remove(skull);
+                    }
+                }
+
+                menus.add(menu);
+            } else {
+
+            }
+        } while (done);
     }
 
     /**
@@ -307,6 +348,9 @@ public class NoteManager {
      * @return if the player have played before
      */
     private boolean playedBefore(OfflinePlayer target, Player player) {
+
+        if (StaffNotes.getPlugin().getConfig().getBoolean("debug")) return true;
+
         if (target.hasPlayedBefore()) {
             return true;
         } else {
