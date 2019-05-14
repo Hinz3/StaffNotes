@@ -80,7 +80,7 @@ public class NoteManager {
         ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
 
         for (OfflinePlayer p : players) {
-            ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
+            ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) SkullType.PLAYER.ordinal());
 
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(p.getName());
@@ -112,7 +112,7 @@ public class NoteManager {
         ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
 
         for (OfflinePlayer p : players) {
-            ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
+            ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) SkullType.PLAYER.ordinal());
 
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(p.getName());

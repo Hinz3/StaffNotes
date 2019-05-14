@@ -1,1 +1,12 @@
-.idea/workspace.xml
+# Ignore idea folder
+idea/
+
+# Ignore output folder
+out/
+target/
+
+# Ignore iml file
+StaffNotes.iml
+.idea/misc.xml
+.idea/artifacts/
+.idea/libraries/
