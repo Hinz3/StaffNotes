@@ -1,0 +1,15 @@
+prefix: [Staff Notes]
+
+commands:
+  default:
+    description: Show a list of commands!
+  info:
+    description: Show information about the plugin!
+  add:
+    description: Add a note onto a player!
+  show:
+    description: Show a list of notes on a player!
+  remove:
+    description: Remove a note from a player!
+  removeall:
+    description: Remove all notes from a player!

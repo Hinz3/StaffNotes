@@ -1,15 +1,17 @@
 package com.shadow5353.Managers;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.shadow5353.StaffNotes;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class SettingsManager {
-    private File file;
-    private FileConfiguration config;
+    private File file, translationFile;
+    private FileConfiguration config, translation;
 
     private static SettingsManager notes = new SettingsManager();
 
@@ -35,6 +37,23 @@ public class SettingsManager {
         }
 
         config = YamlConfiguration.loadConfiguration(file);
+
+        if(StaffNotes.getPlugin().getDataFolder().exists()) {
+            translationFile = new File(StaffNotes.getPlugin().getDataFolder(), "messages.yml");
+
+            if (!translationFile.exists()) {
+                translationFile.getParentFile().mkdirs();
+                StaffNotes.getPlugin().saveResource("messages.yml", false);
+            }
+
+            translation = new YamlConfiguration();
+
+            try {
+                translation.load(translationFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private SettingsManager() {
