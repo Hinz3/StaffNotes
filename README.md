@@ -1,5 +1,7 @@
 # StaffNotes
-[![Release Status](https://img.shields.io/github/release/shadow5353/StaffNotes.svg)](https://github.com/Hinz3/StaffNotes/releases)
+[![Build Status](https://jenkins.hinz3.dk/job/StaffNotes/com.shadow5353$StaffNotes/badge/icon)](https://jenkins.hinz3.dk/job/StaffNotes/)
+[![Release Status](https://img.shields.io/github/release/hinz3/StaffNotes.svg)](https://github.com/hinz3/StaffNotes/releases)
+[![Issues Status](https://img.shields.io/github/issues/hinz3/StaffNotes.svg)](https://github.com/hinz3/StaffNotes/issues)
 ## Description
 Staff Notes let your staff easily make notes on your players! All the notes are saved in your Database so it can be used on multiple servers.
 
