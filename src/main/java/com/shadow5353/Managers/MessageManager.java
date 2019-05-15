@@ -1,14 +1,30 @@
 package com.shadow5353.Managers;
 
+import com.shadow5353.StaffNotes;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
 
 /**
  * Created by Jacob on 23-12-2016.
  */
 public class MessageManager {
+    private File messageFile = new File(StaffNotes.getPlugin().getDataFolder(), "messages.yml");
+    private FileConfiguration messageConfig = YamlConfiguration.loadConfiguration(messageFile);
 
-    public MessageManager() { }
+    private MessageManager() {
+        if (!messageFile.exists())
+            StaffNotes.getPlugin().saveResource("messages.yml", false);
+    }
+
+    private static MessageManager messageManager = new MessageManager();
+
+    public static MessageManager getMessageManager() {
+        return messageManager;
+    }
 
     private String prefix = ChatColor.GOLD + "[" + ChatColor.DARK_RED + "Staff Notes" + ChatColor.GOLD + "] ";
 

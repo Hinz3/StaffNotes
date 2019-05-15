@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 17-03-2018.
  */
 public class Reload extends StaffCommand {
-    private MessageManager message = new MessageManager();
+    private MessageManager message = MessageManager.getMessageManager();
 
     @Override
     public void onCommand(Player p, String[] args) {

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class Info extends StaffCommand{
-    private MessageManager message = new MessageManager();
+    private MessageManager message = MessageManager.getMessageManager();
 
     @Override
     public void onCommand(Player player, String[] args) {

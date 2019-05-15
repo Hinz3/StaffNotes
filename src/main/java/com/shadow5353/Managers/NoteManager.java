@@ -30,7 +30,7 @@ class SkullInfo {
 }
 
 public class NoteManager {
-    private MessageManager msg = new MessageManager();
+    private MessageManager msg = MessageManager.getMessageManager();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private ArrayList<IconMenu> menus = new ArrayList<IconMenu>();
 

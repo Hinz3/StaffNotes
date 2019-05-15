@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 17-03-2018.
  */
 public class Reset extends StaffCommand {
-    private MessageManager message = new MessageManager();
+    private MessageManager message = MessageManager.getMessageManager();
     private NoteManager noteManager = new NoteManager();
 
     @Override
