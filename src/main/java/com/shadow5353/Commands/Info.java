@@ -15,12 +15,12 @@ public class Info extends StaffCommand{
             PluginDescriptionFile pdf = StaffNotes.getPlugin().getDescription();
 
             player.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-            player.sendMessage(ChatColor.GOLD + "Name: " + ChatColor.YELLOW + "Staff Notes");
+            player.sendMessage(ChatColor.GOLD + "Name: " + ChatColor.YELLOW + pdf.getName());
             player.sendMessage(ChatColor.GOLD + "Version: " + ChatColor.YELLOW + pdf.getVersion());
-            player.sendMessage(ChatColor.GOLD + "Author: " + ChatColor.YELLOW + "shadow5353");
+            player.sendMessage(ChatColor.GOLD + "Author: " + ChatColor.YELLOW + pdf.getAuthors());
             player.sendMessage(ChatColor.GOLD + "Description: " + ChatColor.YELLOW + pdf.getDescription());
-//            player.sendMessage(ChatColor.GOLD + "Website: " + ChatColor.YELLOW + "https://shadow5353.com/plugins/staffnotes/");
-            player.sendMessage(ChatColor.GOLD + "Jenkins: " + ChatColor.YELLOW + "https://jenkins.shadow5353.com/job/StaffNotes/");
+//            player.sendMessage(ChatColor.GOLD + "Website: " + ChatColor.YELLOW + "https://hinz3.dk/plugins/staffnotes/");
+            player.sendMessage(ChatColor.GOLD + "Jenkins: " + ChatColor.YELLOW + "https://jenkins.hinz3.dk/job/StaffNotes/");
             player.sendMessage(ChatColor.GOLD + "---------------------------------------------");
         } else {
             message.noPermission(player);
