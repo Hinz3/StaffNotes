@@ -20,6 +20,10 @@ public class MessageManager {
             StaffNotes.getPlugin().saveResource("messages.yml", false);
     }
 
+    public FileConfiguration getMessageConfig() {
+        return messageConfig;
+    }
+
     private static MessageManager messageManager = new MessageManager();
 
     public static MessageManager getMessageManager() {

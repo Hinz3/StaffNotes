@@ -1,15 +1,65 @@
+# Prefix for Staff Notes
 prefix: "Staff Notes"
 
+# If the player do not have permission
+missing-permission: "You do not have permission!"
+
+# If the player have not been on the server before
+player-not-played: "[PLAYER] has never played before on this server!"
+
+# Alert sent to admin when a player joins the server with notes
+alert:
+  prefix: "SN ALERT"
+  message: "[PLAYER] have joined the server and have [amount] notes!"
+
+# Terms going to be used across Staff Notes
+common-terms:
+  usage: "Usage"
+  player: "Player"
+  message: "Message"
+  note: "Note"
+  name: "Name"
+  version: "Version"
+  author: "Author"
+  description: "Description"
+  website: "Website"
+  jenkins: "Jenkins"
+
+# Commands messages
 commands:
   default:
     description: "Show a list of commands!"
+    dont-exist: "That command doesn't exist!"
   info:
     description: "Show information about the plugin!"
   add:
     description: "Add a note onto a player!"
+    success: "Note on [PLAYER] have been added!"
   show:
     description: "Show a list of notes on a player!"
+    no-notes: "[PLAYER] do not have any notes!"
+    found:
+      description: "Here is the list of notes on [PLAYER]!"
+      id: "Note Id: [PLAYER]"
+      player: "Player: [PLAYER]"
+      added-by: "Note added by: [PLAYER]"
+      date-added: "Date Added: [TIME]"
+      note: "Note: [NOTE]"
   remove:
     description: "Remove a note from a player!"
+    error: "This note do not exists on [PLAYER]!"
+    success: "Note [ID] was removed from [PLAYER]"
   removeall:
     description: "Remove all notes from a player!"
+    error: "[PLAYER] do not have any notes!"
+    success: "All notes have been removed from [PLAYER]!"
+  reset:
+    description: "Remove all notes from the database"
+    success: "Staff Notes DB have been reset!"
+  reload:
+    description: "Reload the config"
+    success: "Config have been reloaded!"
+
+gui:
+  title: "Players with notes"
+  description: "Get all notes about [PLAYER]"
