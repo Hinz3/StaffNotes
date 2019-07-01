@@ -1,5 +1,4 @@
 # StaffNotes
-[![Build Status](https://jenkins.hinz3.dk/job/StaffNotes/com.shadow5353$StaffNotes/badge/icon)](https://jenkins.hinz3.dk/job/StaffNotes/)
 [![Release Status](https://img.shields.io/github/release/hinz3/StaffNotes.svg)](https://github.com/hinz3/StaffNotes/releases)
 [![Issues Status](https://img.shields.io/github/issues/hinz3/StaffNotes.svg)](https://github.com/hinz3/StaffNotes/issues)
 ## Description
@@ -32,9 +31,8 @@ Create a MySQL Database and put in the information into the config.yml.
 Reload the server and enjoy!
 
 ## To Do List:
-- [ ] Add support for SQLite.
-- [ ] Add support for flat file storage.
-- [ ] Add GUI with players heads if they have a not.
+To do list can be found under issues with the label todo.
+If you got any suggestions just create an issue.
 
 ## Useful Links:
 - [Spigot Page](https://www.spigotmc.org/resources/staff-notes.33671/)
