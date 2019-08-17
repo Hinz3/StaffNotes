@@ -62,9 +62,9 @@ public class IconMenu implements Listener {
         optionIcons = null;
     }
 
-    @EventHandler(priority=EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     void onInventoryClick(InventoryClickEvent event) {
-        /*if (event.getInventory().getTitle().equals(name)) {
+        if (event.getView().getTitle().equals(name)) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
             if (slot >= 0 && slot < size && optionNames[slot] != null) {
@@ -83,7 +83,8 @@ public class IconMenu implements Listener {
                     destroy();
                 }
             }
-        }*/
+        }
+
     }
 
     public interface OptionClickEventHandler {

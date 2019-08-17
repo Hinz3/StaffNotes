@@ -31,28 +31,58 @@ class SkullInfo {
 
 public class NoteManager {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    private ArrayList<IconMenu> menus = new ArrayList<IconMenu>();
 
-    public NoteManager() {
-    }
-
-    private boolean hasMySQLSave() {
+    private static boolean hasMySQLSave() {
         return StaffNotes.getPlugin().getConfig().get("savingType").equals("mysql");
     }
 
-    private boolean hasFileSave() {
+    private static boolean hasFileSave() {
         return StaffNotes.getPlugin().getConfig().get("savingType").equals("file");
+    }
+
+    public static void showPlayers(Player player) {
+        ArrayList<OfflinePlayer> players = getPlayersWithNotes(player);
+        ArrayList<SkullInfo> skulls = new ArrayList<>();
+
+        for (OfflinePlayer p : players) {
+            ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+
+            SkullMeta meta = (SkullMeta) skull.getItemMeta();
+            meta.setOwningPlayer(p);
+            meta.setDisplayName(ChatColor.LIGHT_PURPLE + p.getName());
+            skull.setItemMeta(meta);
+
+            skulls.add(new SkullInfo(p.getName(), skull));
+        }
+
+        IconMenu menu = new IconMenu("Players with notes", 54, new IconMenu.OptionClickEventHandler() {
+            public void onOptionClick(IconMenu.OptionClickEvent event) {
+                event.getPlayer().performCommand("sn show " + event.getName());
+                event.setWillClose(true);
+            }
+        }, StaffNotes.getPlugin());
+
+        for (int i = 0; i < skulls.size(); i++) {
+            for (SkullInfo skull : skulls) {
+                menu.setOption(i, skull.skull, skull.name, "Get all notes about " + skull.name);
+            }
+        }
+
+        menu.open(player);
+
     }
 
     /**
      * Add a new note to the database
      *
-     * @param target the player that will get the note
+     * @param playerName Player name of the target
      * @param admin  the admin that make the note
      * @param note   the note that will be registered in the database
      */
-    public void addNote(OfflinePlayer target, Player admin, String note) {
-        if (playedBefore(target, admin)) {
+    public static void addNote(String playerName, Player admin, String note) {
+        OfflinePlayer target = getOfflinePlayer(playerName);
+
+        if (target != null) {
             UUID targetUUID = target.getUniqueId();
             UUID adminUUID = admin.getUniqueId();
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -78,86 +108,16 @@ public class NoteManager {
         }
     }
 
-    public void showPlayers(Player player) {
-        ArrayList<OfflinePlayer> players = getPlayersWithNotes(player);
-        ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
-
-        for (OfflinePlayer p : players) {
-            ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) SkullType.PLAYER.ordinal());
-
-            SkullMeta meta = (SkullMeta) skull.getItemMeta();
-            meta.setOwner(p.getName());
-            meta.setDisplayName(ChatColor.LIGHT_PURPLE + p.getName());
-            skull.setItemMeta(meta);
-
-            skulls.add(new SkullInfo(p.getName(), skull));
-        }
-
-        IconMenu menu = new IconMenu("Players with notes", 54, new IconMenu.OptionClickEventHandler() {
-            public void onOptionClick(IconMenu.OptionClickEvent event) {
-                event.getPlayer().performCommand("sn show " + event.getName());
-                event.setWillClose(true);
-            }
-        }, StaffNotes.getPlugin());
-
-        for (int i = 0; i < skulls.size(); i++) {
-            for (SkullInfo skull : skulls) {
-                menu.setOption(i, skull.skull, skull.name, "Get all notes about " + skull.name);
-            }
-        }
-
-        menu.open(player);
-
-    }
-
-    private void generateGUIs() {
-//        ArrayList<OfflinePlayer> players = getPlayersWithNotes();
-//        ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
-//
-//        for (OfflinePlayer p : players) {
-//            ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) SkullType.PLAYER.ordinal());
-//
-//            SkullMeta meta = (SkullMeta) skull.getItemMeta();
-//            meta.setOwner(p.getName());
-//            meta.setDisplayName(ChatColor.LIGHT_PURPLE + p.getName());
-//            skull.setItemMeta(meta);
-//
-//            skulls.add(new SkullInfo(p.getName(), skull));
-//        }
-//
-//        boolean done = false;
-//
-//        do {
-//            if (skulls.size() < 45) {
-//                IconMenu menu = new IconMenu("Players with notes", 54, new IconMenu.OptionClickEventHandler() {
-//                    public void onOptionClick(IconMenu.OptionClickEvent event) {
-//                        event.getPlayer().performCommand("sn show " + event.getName());
-//                        event.setWillClose(true);
-//                    }
-//                }, StaffNotes.getPlugin());
-//
-//                for (int i = 0; i < 45; i++) {
-//                    for (SkullInfo skull : skulls) {
-//                        menu.setOption(i, skull.skull, skull.name, "All notes about " + skull.name);
-//                        skulls.remove(skull);
-//                    }
-//                }
-//
-//                menus.add(menu);
-//            } else {
-//
-//            }
-//        } while (done);
-    }
-
     /**
      * Show a list of notes for a player
      *
-     * @param target the given player
+     * @param playerName Player name of the target
      * @param admin  the admin asking for the list
      */
-    public void showNotes(OfflinePlayer target, Player admin) {
-        if (playedBefore(target, admin)) {
+    public static void showNotes(String playerName, Player admin) {
+        OfflinePlayer target = getOfflinePlayer(playerName);
+
+        if (target != null) {
             UUID targetUUID = target.getUniqueId();
 
             if (hasMySQLSave()) {
@@ -244,12 +204,14 @@ public class NoteManager {
     /**
      * Remove a note from a player
      *
-     * @param target the player that will get a note removed
+     * @param playerName Player name of the target
      * @param admin  the admin that do it
      * @param noteID the id of the note
      */
-    public void removeNote(OfflinePlayer target, Player admin, int noteID) {
-        if (playedBefore(target, admin)) {
+    public static void removeNote(String playerName, Player admin, int noteID) {
+        OfflinePlayer target = getOfflinePlayer(playerName);
+
+        if (target != null) {
             UUID targetUUID = target.getUniqueId();
 
             if (hasMySQLSave()) {
@@ -287,11 +249,13 @@ public class NoteManager {
     /**
      * Remove all notes from a player
      *
-     * @param target the player that will get notes remove
+     * @param playerName Player name of the target
      * @param admin  the admin that want to remove all notes
      */
-    public void removeAll(OfflinePlayer target, Player admin) {
-        if (playedBefore(target, admin)) {
+    public static void removeAll(String playerName, Player admin) {
+        OfflinePlayer target = getOfflinePlayer(playerName);
+
+        if (target != null) {
             UUID targetUUID = target.getUniqueId();
 
             if (hasMySQLSave()) {
@@ -331,7 +295,7 @@ public class NoteManager {
      * @param player the player for checking
      * @return if the player has a note
      */
-    public boolean hasNote(Player player) {
+    public static boolean hasNote(Player player) {
         UUID playerUUID = player.getUniqueId();
 
         if (hasMySQLSave()) {
@@ -360,7 +324,7 @@ public class NoteManager {
      *
      * @param player
      */
-    public void reset(Player player) {
+    public static void reset(Player player) {
         if (hasMySQLSave()) {
 
             try {
@@ -384,26 +348,21 @@ public class NoteManager {
     }
 
     /**
-     * Check if a offline player have played before
-     *
-     * @param target the offline player
-     * @param player the player that get the error message
-     * @return if the player have played before
+     * Get an offline player
+     * @param name name of the player
+     * @return Offline Player
      */
-    private boolean playedBefore(OfflinePlayer target, Player player) {
+    private static OfflinePlayer getOfflinePlayer(String name) {
+        OfflinePlayer[] players = Bukkit.getOfflinePlayers();
 
-        if (StaffNotes.getPlugin().getConfig().getBoolean("debug")) return true;
-
-        if (target.hasPlayedBefore()) {
-            return true;
-        } else {
-            String msg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("player-note-played"), "[PLAYER]", target.getName());
-            MessageManager.sendMessage(player, msg, true);
-            return false;
+        for (OfflinePlayer player : players) {
+            if (player.getName().equals(name)) return player;
         }
+
+        return null;
     }
 
-    private ArrayList<OfflinePlayer> getPlayersWithNotes(Player admin) {
+    private static ArrayList<OfflinePlayer> getPlayersWithNotes(Player admin) {
         ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
 
         if (hasFileSave()) {

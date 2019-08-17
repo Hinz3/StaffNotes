@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 17-03-2018.
  */
 public class Remove extends StaffCommand {
-    private NoteManager noteManager = new NoteManager();
 
     @Override
     public void onCommand(Player p, String[] args) {
@@ -21,11 +20,10 @@ public class Remove extends StaffCommand {
             if (!(args.length == 2)) {
                 MessageManager.error(p, MessageManager.getMessageConfig().getString("commands.remove.usage"));
             } else {
-                OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
                 int noteID = Integer.parseInt(args[1]);
 
-                noteManager.removeNote(target, p, noteID);
+                NoteManager.removeNote(args[0], p, noteID);
             }
         }
     }

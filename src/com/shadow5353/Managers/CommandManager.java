@@ -1,12 +1,10 @@
 package com.shadow5353.Managers;
 
 import com.shadow5353.Commands.*;
-import com.shadow5353.StaffNotes;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -14,7 +12,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 public class CommandManager implements CommandExecutor {
-    private ArrayList<StaffCommand> cmds = new ArrayList<StaffCommand>();
+    private ArrayList<StaffCommand> cmds = new ArrayList<>();
 
     public CommandManager() {
         cmds.add(new Info());
@@ -24,6 +22,7 @@ public class CommandManager implements CommandExecutor {
         cmds.add(new Remove());
         cmds.add(new RemoveAll());
         cmds.add(new Reset());
+        cmds.add(new Gui());
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -55,7 +54,7 @@ public class CommandManager implements CommandExecutor {
                     return true;
                 }
 
-                Vector<String> a = new Vector<String>(Arrays.asList(args));
+                Vector<String> a = new Vector<>(Arrays.asList(args));
                 a.remove(0);
                 args = a.toArray(new String[a.size()]);
 

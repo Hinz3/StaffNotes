@@ -51,10 +51,11 @@ commands:
   add:
     description: "&eAdd a note onto a player!"
     success: "&eNote on [PLAYER] have been added!"
-    usage: "Usage: /sn add <player> <message>"
+    usage: "&eUsage: /sn add <player> <message>"
   show:
     description: "&eShow a list of notes on a player!"
     no-notes: "&e[PLAYER] do not have any notes!"
+    usage: "&eUsage: /sn show <Player>"
     found:
       description: "&eHere is the list of notes on [PLAYER]!"
       id: "&eNote Id: [ID]"
@@ -78,6 +79,8 @@ commands:
   reload:
     description: "&eReload the config"
     success: "&eConfig have been reloaded!"
+  gui:
+    description: "&eOpen Staff Notes Menu"
 
 gui:
   title: "Players with notes"

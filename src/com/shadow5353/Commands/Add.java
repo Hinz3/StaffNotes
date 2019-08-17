@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 16-03-2018.
  */
 public class Add extends StaffCommand {
-    private NoteManager noteManager = new NoteManager();
 
     @Override
     public void onCommand(Player p, String[] args) {
@@ -28,9 +27,7 @@ public class Add extends StaffCommand {
                     note = note + arg;
                 }
 
-                OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-
-                noteManager.addNote(target, p, note);
+                NoteManager.addNote(args[0], p, note);
             }
         }
     }

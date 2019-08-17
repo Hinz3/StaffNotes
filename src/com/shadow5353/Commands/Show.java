@@ -17,11 +17,9 @@ public class Show extends StaffCommand {
             MessageManager.noPermission(p);
         } else {
             if (!(args.length == 1)) {
-                noteManager.showPlayers(p);
+                MessageManager.sendMessage(p, MessageManager.getMessageConfig().getString("commands.show.usage"), true);
             } else {
-                OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-
-                noteManager.showNotes(target, p);
+                NoteManager.showNotes(args[0], p);
             }
         }
     }

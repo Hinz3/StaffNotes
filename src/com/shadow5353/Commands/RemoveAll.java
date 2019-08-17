@@ -2,6 +2,7 @@ package com.shadow5353.Commands;
 
 import com.shadow5353.Managers.MessageManager;
 import com.shadow5353.Managers.NoteManager;
+import com.shadow5353.Note;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -11,7 +12,6 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 17-03-2018.
  */
 public class RemoveAll extends StaffCommand {
-    private NoteManager noteManager = new NoteManager();
 
     @Override
     public void onCommand(Player p, String[] args) {
@@ -23,7 +23,7 @@ public class RemoveAll extends StaffCommand {
             } else {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
-                noteManager.removeAll(target, p);
+                NoteManager.removeAll(args[0], p);
             }
         }
     }
