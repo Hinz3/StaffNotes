@@ -1,36 +1,39 @@
 # Useful replacements:
-# - [PLAYER] : Players name
+# - [PLAYER] : The targeted players name
 # - [NOTE] : Note message
 # - [ID] : Note Id
-# - [TIME] : Note time created
+# - [DATE] : Note date created
+# - [NAME] : Name of the plugin
+# - [VERSION] : Version of the plugin
+# - [AUTHOR] : Author of the plugin
+# - [DESCRIPTION] : Description of the plugin
+# - [WEBSITE] : Website for the plugin
 
 # Color codes: https://wiki.ess3.net/mc/
 
 # Prefix for Staff Notes
 prefix: "&0[&4Staff Notes&0]"
 
+console-errors:
+  command: "Only players can use StaffNotes!"
+  sql: "&4Something went wrong with the database, check console!"
+
 # If the player do not have permission
-missing-permission: "You do not have permission!"
+missing-permission: "&cYou do not have permission!"
 
 # If the player have not been on the server before
-player-not-played: "[PLAYER] has never played before on this server!"
+player-not-played: "&e[PLAYER] has never played before on this server!"
 
 # Alert sent to admin when a player joins the server with notes
 alert:
-  prefix: "SN ALERT"
-  message: "[PLAYER] have joined the server and have [amount] notes!"
+  prefix: "&4SN ALERT"
+  message: "&e[PLAYER] have joined the server and have [amount] notes!"
 
 # Terms going to be used across Staff Notes
 common-terms:
-  usage: "Usage"
-  player: "Player"
-  message: "Message"
-  note: "Note"
-  name: "Name"
-  version: "Version"
-  author: "Author"
-  description: "Description"
-  website: "Website"
+  player: "&ePlayer"
+  message: "&eMessage"
+  note: "&eNote"
 
 # Commands messages
 commands:
@@ -39,9 +42,16 @@ commands:
     dont-exist: "&4That command doesn't exist!"
   info:
     description: "&eShow information about the plugin!"
+    terms:
+      name: "&eName: [NAME]"
+      version: "&eVersion: [VERSION]"
+      author: "&eAuthor: [AUTHOR]"
+      description: "&eDescription: [DESCRIPTION]"
+      website: "&eWebsite: [WEBSITE]"
   add:
     description: "&eAdd a note onto a player!"
     success: "&eNote on [PLAYER] have been added!"
+    usage: "Usage: /sn add <player> <message>"
   show:
     description: "&eShow a list of notes on a player!"
     no-notes: "&e[PLAYER] do not have any notes!"
@@ -50,16 +60,18 @@ commands:
       id: "&eNote Id: [ID]"
       player: "&ePlayer: [PLAYER]"
       added-by: "&eNote added by: [PLAYER]"
-      date-added: "&eDate Added: [TIME]"
+      date-added: "&eDate Added: [DATE]"
       note: "&eNote: [NOTE]"
   remove:
     description: "&eRemove a note from a player!"
     error: "&eThis note do not exists on [PLAYER]!"
     success: "&eNote [ID] was removed from [PLAYER]"
+    usage: "&eUsage: /sn remove <Player> <ID>"
   removeall:
     description: "&eRemove all notes from a player!"
     error: "&e[PLAYER] do not have any notes!"
     success: "&eAll notes have been removed from [PLAYER]!"
+    usage: "&eUsage: /sn removeall [Player]"
   reset:
     description: "&eRemove all notes from the database"
     success: "&eStaff Notes DB have been reset!"

@@ -27,6 +27,6 @@ public class Show extends StaffCommand {
     }
 
     public Show() {
-        super("Show a list of notes on a player","<Player>", "show");
+        super(MessageManager.getMessageConfig().getString("commands.show.description"),"<Player>", "show");
     }
 }

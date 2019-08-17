@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.Vector;
 
 public class CommandManager implements CommandExecutor {
-    private FileConfiguration config = StaffNotes.getPlugin().getConfig();
-
     private ArrayList<StaffCommand> cmds = new ArrayList<StaffCommand>();
 
     public CommandManager() {
@@ -30,7 +28,7 @@ public class CommandManager implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
-            MessageManager.error(sender, "Only players can use StaffNotes!");
+            MessageManager.sendMessage(sender, MessageManager.getMessageConfig().getString("console-errors.command"), true);
             return true;
         }
 
@@ -43,7 +41,7 @@ public class CommandManager implements CommandExecutor {
 
                 if (args.length == 0) {
                     p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-                    MessageManager.command(p, "/sn" + ChatColor.BLACK + " : " + ChatColor.YELLOW + "Show a list of commands");
+                    MessageManager.command(p, "/sn" + ChatColor.BLACK + " : " + MessageManager.getMessageConfig().getString("commands.default.description"));
                     for (StaffCommand mc : cmds)
                         MessageManager.command(p, "/sn " + aliases(mc) + " " + mc.getUsage() + ChatColor.BLACK + " : " + ChatColor.YELLOW + mc.getMessage());
                     p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
@@ -53,7 +51,7 @@ public class CommandManager implements CommandExecutor {
                 StaffCommand c = getCommand(args[0]);
 
                 if (c == null) {
-                    MessageManager.error(p, "That command doesn't exist!");
+                    MessageManager.error(p, MessageManager.getMessageConfig().getString("commands.default.dont-exist"));
                     return true;
                 }
 

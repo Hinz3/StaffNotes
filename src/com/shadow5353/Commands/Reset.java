@@ -20,6 +20,6 @@ public class Reset extends StaffCommand {
     }
 
     public Reset() {
-        super("Remove all notes from the database", "", "reset");
+        super(MessageManager.getMessageConfig().getString("commands.reset.description"), "", "reset");
     }
 }

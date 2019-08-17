@@ -61,21 +61,25 @@ public class NoteManager {
                 try {
                     MySQL.getInstance().getStatement().executeUpdate("INSERT INTO players (fldUUID, fldNote, fldAdmin, fldTimeStamp) " +
                             "VALUES ('" + targetUUID + "', '" + note + "', '" + adminUUID + "', '" + timestamp + "')");
-                    MessageManager.good(admin, "Note on " + target.getName() + " have been added!");
+                    String msg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.add.success"), "[PLAYER]", target.getName());
+                    MessageManager.sendMessage(admin, msg, true);
                 } catch (SQLException e) {
+                    String sqlError = MessageManager.getMessageConfig().getString("console-errors.sql");
+                    MessageManager.sendMessage(admin, sqlError, true);
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 String date = timestamp.toString();
 
                 FlatSaving.getInstance().saveNote(note, targetUUID, adminUUID, date);
-                MessageManager.good(admin, "Note on " + target.getName() + " have been added!");
+                String msg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.add.success"), "[PLAYER]", target.getName());
+                MessageManager.sendMessage(admin, msg, true);
             }
         }
     }
 
     public void showPlayers(Player player) {
-        ArrayList<OfflinePlayer> players = getPlayersWithNotes();
+        ArrayList<OfflinePlayer> players = getPlayersWithNotes(player);
         ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
 
         for (OfflinePlayer p : players) {
@@ -107,43 +111,43 @@ public class NoteManager {
     }
 
     private void generateGUIs() {
-        ArrayList<OfflinePlayer> players = getPlayersWithNotes();
-        ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
-
-        for (OfflinePlayer p : players) {
-            ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) SkullType.PLAYER.ordinal());
-
-            SkullMeta meta = (SkullMeta) skull.getItemMeta();
-            meta.setOwner(p.getName());
-            meta.setDisplayName(ChatColor.LIGHT_PURPLE + p.getName());
-            skull.setItemMeta(meta);
-
-            skulls.add(new SkullInfo(p.getName(), skull));
-        }
-
-        boolean done = false;
-
-        do {
-            if (skulls.size() < 45) {
-                IconMenu menu = new IconMenu("Players with notes", 54, new IconMenu.OptionClickEventHandler() {
-                    public void onOptionClick(IconMenu.OptionClickEvent event) {
-                        event.getPlayer().performCommand("sn show " + event.getName());
-                        event.setWillClose(true);
-                    }
-                }, StaffNotes.getPlugin());
-
-                for (int i = 0; i < 45; i++) {
-                    for (SkullInfo skull : skulls) {
-                        menu.setOption(i, skull.skull, skull.name, "All notes about " + skull.name);
-                        skulls.remove(skull);
-                    }
-                }
-
-                menus.add(menu);
-            } else {
-
-            }
-        } while (done);
+//        ArrayList<OfflinePlayer> players = getPlayersWithNotes();
+//        ArrayList<SkullInfo> skulls = new ArrayList<SkullInfo>();
+//
+//        for (OfflinePlayer p : players) {
+//            ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1, (short) SkullType.PLAYER.ordinal());
+//
+//            SkullMeta meta = (SkullMeta) skull.getItemMeta();
+//            meta.setOwner(p.getName());
+//            meta.setDisplayName(ChatColor.LIGHT_PURPLE + p.getName());
+//            skull.setItemMeta(meta);
+//
+//            skulls.add(new SkullInfo(p.getName(), skull));
+//        }
+//
+//        boolean done = false;
+//
+//        do {
+//            if (skulls.size() < 45) {
+//                IconMenu menu = new IconMenu("Players with notes", 54, new IconMenu.OptionClickEventHandler() {
+//                    public void onOptionClick(IconMenu.OptionClickEvent event) {
+//                        event.getPlayer().performCommand("sn show " + event.getName());
+//                        event.setWillClose(true);
+//                    }
+//                }, StaffNotes.getPlugin());
+//
+//                for (int i = 0; i < 45; i++) {
+//                    for (SkullInfo skull : skulls) {
+//                        menu.setOption(i, skull.skull, skull.name, "All notes about " + skull.name);
+//                        skulls.remove(skull);
+//                    }
+//                }
+//
+//                menus.add(menu);
+//            } else {
+//
+//            }
+//        } while (done);
     }
 
     /**
@@ -162,10 +166,12 @@ public class NoteManager {
                     ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
-                        MessageManager.error(admin, target.getName() + " do not have any notes!");
+                        String errorMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.no-notes"), "[PLAYER]", target.getName());
+                        MessageManager.sendMessage(admin, errorMsg, true);
                     } else {
 
-                        MessageManager.info(admin, "Here is the list of notes on " + target.getName() + "!");
+                        String msg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.description"), "[PLAYER]", target.getName());
+                        MessageManager.sendMessage(admin, msg, true);
 
                         do {
                             int id = result.getInt("fldID");
@@ -175,20 +181,31 @@ public class NoteManager {
 
                             OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
 
-                            admin.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-                            admin.sendMessage(ChatColor.GOLD + "Note ID: " + ChatColor.YELLOW + id);
-                            admin.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.YELLOW + target.getName());
-                            admin.sendMessage(ChatColor.GOLD + "Note Added By: " + ChatColor.YELLOW + madeNote.getName());
-                            admin.sendMessage(ChatColor.GOLD + "Date Added: " + ChatColor.YELLOW + sdf.format(timestamp));
-                            admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + note);
+                            String idMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.id"), "[ID]", id + "");
+                            String playerMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.player"), "[PLAYER]", target.getName());
+                            String addedMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.added-by"), "[PLAYER]", madeNote.getName());
+                            String dateMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.date-added"), "[DATE]", sdf.format(timestamp));
+                            String noteMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.note"), "[NOTE]", note);
+
+                            MessageManager.sendMessage(admin, ChatColor.GOLD + "---------------------------------------------", false);
+                            if (idMsg != null) MessageManager.sendMessage(admin, idMsg, false);
+                            if (playerMsg != null) MessageManager.sendMessage(admin, playerMsg, false);
+                            if (addedMsg != null) MessageManager.sendMessage(admin, addedMsg, false);
+                            if (dateMsg != null) MessageManager.sendMessage(admin, dateMsg, false);
+                            if (noteMsg != null) MessageManager.sendMessage(admin, noteMsg, false);
                         } while (result.next());
                     }
 
                 } catch (SQLException e) {
+                    String sqlError = MessageManager.getMessageConfig().getString("console-errors.sql");
+                    MessageManager.sendMessage(admin, sqlError, true);
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 boolean found = false;
+
+                String msg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.description"), "[PLAYER]", target.getName());
+                MessageManager.sendMessage(admin, msg, true);
 
                 for (Note note : FlatSaving.getInstance().getNotes()) {
                     if (targetUUID.equals(note.getPlayerUUID())) {
@@ -201,17 +218,24 @@ public class NoteManager {
 
                         OfflinePlayer madeNote = Bukkit.getOfflinePlayer(adminUUID);
 
-                        admin.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-                        admin.sendMessage(ChatColor.GOLD + "Note ID: " + ChatColor.YELLOW + id);
-                        admin.sendMessage(ChatColor.GOLD + "Player: " + ChatColor.YELLOW + target.getName());
-                        admin.sendMessage(ChatColor.GOLD + "Note Added By: " + ChatColor.YELLOW + madeNote.getName());
-                        admin.sendMessage(ChatColor.GOLD + "Date Added: " + ChatColor.YELLOW + sdf.format(timestamp));
-                        admin.sendMessage(ChatColor.GOLD + "Note: " + ChatColor.YELLOW + noteMessage);
+                        String idMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.id"), "[ID]", id + "");
+                        String playerMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.player"), "[PLAYER]", target.getName());
+                        String addedMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.added-by"), "[PLAYER]", madeNote.getName());
+                        String dateMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.date-added"), "[DATE]", sdf.format(timestamp));
+                        String noteMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.found.note"), "[NOTE]", noteMessage);
+
+                        MessageManager.sendMessage(admin, ChatColor.GOLD + "---------------------------------------------", false);
+                        if (idMsg != null) MessageManager.sendMessage(admin, idMsg, false);
+                        if (playerMsg != null) MessageManager.sendMessage(admin, playerMsg, false);
+                        if (addedMsg != null) MessageManager.sendMessage(admin, addedMsg, false);
+                        if (dateMsg != null) MessageManager.sendMessage(admin, dateMsg, false);
+                        if (noteMsg != null) MessageManager.sendMessage(admin, noteMsg, false);
                     }
                 }
 
                 if (!(found)) {
-                    MessageManager.error(admin, "There were no notes found on " + target.getName() + "!");
+                    String errorMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.show.no-notes"), "[PLAYER]", target.getName());
+                    MessageManager.sendMessage(admin, errorMsg, true);
                 }
             }
         }
@@ -234,19 +258,27 @@ public class NoteManager {
                     ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
-                        MessageManager.error(admin, "This note do not exists on " + target.getName() + "!");
+                        String errorMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.remove.error"), "[PLAYER]", target.getName());
+                        MessageManager.sendMessage(admin, errorMsg, true);
                     } else {
                         MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
-                        MessageManager.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
+                        String successMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.remove.success"), "[ID]", noteID + "");
+                        successMsg = MessageManager.replacePlaceholder(successMsg, "[PLAYER]", target.getName());
+                        MessageManager.sendMessage(admin, successMsg, true);
                     }
                 } catch (SQLException e) {
+                    String sqlError = MessageManager.getMessageConfig().getString("console-errors.sql");
+                    MessageManager.sendMessage(admin, sqlError, true);
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 if (FlatSaving.getInstance().removeNote(targetUUID, noteID)) {
-                    MessageManager.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
+                    String successMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.remove.success"), "[ID]", noteID + "");
+                    successMsg = MessageManager.replacePlaceholder(successMsg, "[PLAYER]", target.getName());
+                    MessageManager.sendMessage(admin, successMsg, true);
                 } else {
-                    MessageManager.error(admin, "This note do not exists on " + target.getName() + "!");
+                    String errorMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.remove.error"), "[PLAYER]", target.getName());
+                    MessageManager.sendMessage(admin, errorMsg, true);
                 }
             }
         }
@@ -268,20 +300,26 @@ public class NoteManager {
                     ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
-                        MessageManager.error(admin, target.getName() + " do not have any notes!");
+                        String errorMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.removeall.error"), "[PLAYER]", target.getName());
+                        MessageManager.sendMessage(admin, errorMsg, true);
                     } else {
                         MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
 
-                        MessageManager.good(admin, "All notes have been removed from " + target.getName() + "!");
+                        String successMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.removeall.success"), "[PLAYER]", target.getName() + "");
+                        MessageManager.sendMessage(admin, successMsg, true);
                     }
                 } catch (SQLException e) {
+                    String sqlError = MessageManager.getMessageConfig().getString("console-errors.sql");
+                    MessageManager.sendMessage(admin, sqlError, true);
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 if (FlatSaving.getInstance().removeAllNotes(targetUUID)) {
-                    MessageManager.good(admin, "All notes have been removed from " + target.getName() + "!");
+                    String successMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.removeall.success"), "[PLAYER]", target.getName() + "");
+                    MessageManager.sendMessage(admin, successMsg, true);
                 } else {
-                    MessageManager.error(admin, target.getName() + " do not have any notes!");
+                    String errorMsg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("commands.removeall.error"), "[PLAYER]", target.getName());
+                    MessageManager.sendMessage(admin, errorMsg, true);
                 }
             }
         }
@@ -307,6 +345,8 @@ public class NoteManager {
                     return false;
                 }
             } catch (SQLException e) {
+                String sqlError = MessageManager.getMessageConfig().getString("console-errors.sql");
+                MessageManager.sendMessage(player, sqlError, true);
                 e.printStackTrace();
             }
         } else if (hasFileSave()) {
@@ -328,14 +368,18 @@ public class NoteManager {
 
                 MySQL.getInstance().startUp();
 
-                MessageManager.good(player, "Staff Notes have been reset!");
+                String msg = MessageManager.getMessageConfig().getString("commands.reset.success");
+                MessageManager.sendMessage(player, msg, true);
             } catch (SQLException e) {
+                String sqlError = MessageManager.getMessageConfig().getString("console-errors.sql");
+                MessageManager.sendMessage(player, sqlError, true);
                 e.printStackTrace();
             }
         } else if (hasFileSave()) {
             FlatSaving.getInstance().reset();
 
-            MessageManager.good(player, "Staff Notes have been reset!");
+            String msg = MessageManager.getMessageConfig().getString("commands.reset.success");
+            MessageManager.sendMessage(player, msg, true);
         }
     }
 
@@ -353,12 +397,13 @@ public class NoteManager {
         if (target.hasPlayedBefore()) {
             return true;
         } else {
-            MessageManager.error(player, target.getName() + " has never played before on this server!");
+            String msg = MessageManager.replacePlaceholder(MessageManager.getMessageConfig().getString("player-note-played"), "[PLAYER]", target.getName());
+            MessageManager.sendMessage(player, msg, true);
             return false;
         }
     }
 
-    private ArrayList<OfflinePlayer> getPlayersWithNotes() {
+    private ArrayList<OfflinePlayer> getPlayersWithNotes(Player admin) {
         ArrayList<OfflinePlayer> players = new ArrayList<OfflinePlayer>();
 
         if (hasFileSave()) {
@@ -379,6 +424,8 @@ public class NoteManager {
                     players.add(player);
                 } while (result.next());
             } catch (SQLException ex) {
+                String sqlError = MessageManager.getMessageConfig().getString("console-errors.sql");
+                MessageManager.sendMessage(admin, sqlError, true);
                 ex.printStackTrace();
             }
         }

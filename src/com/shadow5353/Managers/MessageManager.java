@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.io.File;
 
@@ -34,6 +35,30 @@ public class MessageManager {
         prefix = getMessageConfig().getString("prefix") + " "  + ChatColor.YELLOW;
     }
 
+    public static String replacePlaceholder(String msg) {
+        if (msg == null) return null;
+
+        PluginDescriptionFile pdf = StaffNotes.getPlugin().getDescription();
+
+        if (msg.contains("[NAME]")) msg = msg.replace("[NAME]", pdf.getName());
+        if (msg.contains("[VERSION]")) msg = msg.replace("[VERSION]", pdf.getVersion());
+        if (msg.contains("[AUTHOR]")) msg = msg.replace("[AUTHOR]", pdf.getAuthors().get(0));
+        if (msg.contains("[DESCRIPTION]")) msg = msg.replace("[DESCRIPTION]", pdf.getDescription());
+        if (msg.contains("[WEBSITE]")) msg = msg.replace("[WEBSITE]", pdf.getWebsite());
+
+        return msg;
+    }
+
+    public static String replacePlaceholder(String msg, String placeholder, String replacement) {
+        if (msg == null) return null;
+        if (placeholder == null) return null;
+        if (replacement == null) return null;
+
+        if (msg.contains(placeholder)) msg = msg.replace(placeholder, replacement);
+
+        return msg;
+    }
+
     public static FileConfiguration getMessageConfig() {
         return messageConfig;
     }
@@ -60,6 +85,13 @@ public class MessageManager {
 
     public static void noPermission(CommandSender s) {
         msg(s,getMessageConfig().getString("missing-permission"));
+    }
+
+    public static void sendMessage(CommandSender s, String msg, boolean addPrfix) {
+        if (addPrfix)
+            s.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + msg));
+        else
+            s.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
     }
 
     private static void msg(CommandSender s, String msg) {

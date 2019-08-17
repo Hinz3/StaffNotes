@@ -21,11 +21,11 @@ public class Reload extends StaffCommand {
             if (StaffNotes.getPlugin().getConfig().get("savingType").equals("file"))
                 FlatSaving.getInstance().setupNotes();
 
-            MessageManager.good(p, "Config have been reloaded!");
+            MessageManager.good(p, MessageManager.getMessageConfig().getString("commands.reload.success"));
         }
     }
 
     public Reload() {
-        super("Reload the config","","reload");
+        super(MessageManager.getMessageConfig().getString("commands.reload.description"),"","reload");
     }
 }

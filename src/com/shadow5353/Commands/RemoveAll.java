@@ -19,7 +19,7 @@ public class RemoveAll extends StaffCommand {
             MessageManager.noPermission(p);
         } else {
             if (!(args.length == 1)) {
-                MessageManager.error(p, "Usage: " + ChatColor.GOLD + "/sn removeall [Player]");
+                MessageManager.error(p, MessageManager.getMessageConfig().getString("commands.removeall.usage"));
             } else {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
@@ -29,6 +29,6 @@ public class RemoveAll extends StaffCommand {
     }
 
     public RemoveAll() {
-        super("Remove all notes from a player", "<Player>", "removeall");
+        super(MessageManager.getMessageConfig().getString("commands.removeall.description"), "<Player>", "removeall");
     }
 }

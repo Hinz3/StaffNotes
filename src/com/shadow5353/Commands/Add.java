@@ -19,7 +19,7 @@ public class Add extends StaffCommand {
             MessageManager.noPermission(p);
         } else {
             if (!(args.length >= 2)) {
-                MessageManager.error(p, "Usage: " + ChatColor.GOLD + "/sn add <player> <message>");
+                MessageManager.error(p, MessageManager.getMessageConfig().getString("commands.add.usage"));
             } else {
                 String note = "";
 
@@ -36,6 +36,6 @@ public class Add extends StaffCommand {
     }
 
     public Add() {
-        super("Add a note onto a player", "<Player> <Note>", "add");
+        super(MessageManager.getMessageConfig().getString("commands.add.description"), "<Player> <Note>", "add");
     }
 }
