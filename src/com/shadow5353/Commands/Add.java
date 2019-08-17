@@ -11,16 +11,15 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 16-03-2018.
  */
 public class Add extends StaffCommand {
-    private MessageManager message = MessageManager.getMessageManager();
     private NoteManager noteManager = new NoteManager();
 
     @Override
     public void onCommand(Player p, String[] args) {
         if (!(p.hasPermission("staffnotes.add"))) {
-            message.noPermission(p);
+            MessageManager.noPermission(p);
         } else {
             if (!(args.length >= 2)) {
-                message.error(p, "Usage: " + ChatColor.GOLD + "/sn add <player> <message>");
+                MessageManager.error(p, "Usage: " + ChatColor.GOLD + "/sn add <player> <message>");
             } else {
                 String note = "";
 

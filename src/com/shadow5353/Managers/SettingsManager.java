@@ -1,13 +1,11 @@
 package com.shadow5353.Managers;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.shadow5353.StaffNotes;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
 
 public class SettingsManager {
     private File file;

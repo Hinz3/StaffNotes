@@ -30,7 +30,6 @@ class SkullInfo {
 }
 
 public class NoteManager {
-    private MessageManager msg = MessageManager.getMessageManager();
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private ArrayList<IconMenu> menus = new ArrayList<IconMenu>();
 
@@ -62,7 +61,7 @@ public class NoteManager {
                 try {
                     MySQL.getInstance().getStatement().executeUpdate("INSERT INTO players (fldUUID, fldNote, fldAdmin, fldTimeStamp) " +
                             "VALUES ('" + targetUUID + "', '" + note + "', '" + adminUUID + "', '" + timestamp + "')");
-                    msg.good(admin, "Note on " + target.getName() + " have been added!");
+                    MessageManager.good(admin, "Note on " + target.getName() + " have been added!");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -70,7 +69,7 @@ public class NoteManager {
                 String date = timestamp.toString();
 
                 FlatSaving.getInstance().saveNote(note, targetUUID, adminUUID, date);
-                msg.good(admin, "Note on " + target.getName() + " have been added!");
+                MessageManager.good(admin, "Note on " + target.getName() + " have been added!");
             }
         }
     }
@@ -163,10 +162,10 @@ public class NoteManager {
                     ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
-                        msg.error(admin, target.getName() + " do not have any notes!");
+                        MessageManager.error(admin, target.getName() + " do not have any notes!");
                     } else {
 
-                        msg.info(admin, "Here is the list of notes on " + target.getName() + "!");
+                        MessageManager.info(admin, "Here is the list of notes on " + target.getName() + "!");
 
                         do {
                             int id = result.getInt("fldID");
@@ -212,7 +211,7 @@ public class NoteManager {
                 }
 
                 if (!(found)) {
-                    msg.error(admin, "There were no notes found on " + target.getName() + "!");
+                    MessageManager.error(admin, "There were no notes found on " + target.getName() + "!");
                 }
             }
         }
@@ -235,19 +234,19 @@ public class NoteManager {
                     ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
-                        msg.error(admin, "This note do not exists on " + target.getName() + "!");
+                        MessageManager.error(admin, "This note do not exists on " + target.getName() + "!");
                     } else {
                         MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldID = " + noteID + " AND fldUUID = '" + targetUUID + "'");
-                        msg.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
+                        MessageManager.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 if (FlatSaving.getInstance().removeNote(targetUUID, noteID)) {
-                    msg.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
+                    MessageManager.good(admin, "Note " + noteID + " was removed from " + target.getName() + "!");
                 } else {
-                    msg.error(admin, "This note do not exists on " + target.getName() + "!");
+                    MessageManager.error(admin, "This note do not exists on " + target.getName() + "!");
                 }
             }
         }
@@ -269,20 +268,20 @@ public class NoteManager {
                     ResultSet result = MySQL.getInstance().getStatement().executeQuery("SELECT * FROM players WHERE fldUUID = '" + targetUUID + "'");
 
                     if (!result.next()) {
-                        msg.error(admin, target.getName() + " do not have any notes!");
+                        MessageManager.error(admin, target.getName() + " do not have any notes!");
                     } else {
                         MySQL.getInstance().getStatement().executeUpdate("DELETE FROM players WHERE fldUUID = '" + targetUUID + "'");
 
-                        msg.good(admin, "All notes have been removed from " + target.getName() + "!");
+                        MessageManager.good(admin, "All notes have been removed from " + target.getName() + "!");
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } else if (hasFileSave()) {
                 if (FlatSaving.getInstance().removeAllNotes(targetUUID)) {
-                    msg.good(admin, "All notes have been removed from " + target.getName() + "!");
+                    MessageManager.good(admin, "All notes have been removed from " + target.getName() + "!");
                 } else {
-                    msg.error(admin, target.getName() + " do not have any notes!");
+                    MessageManager.error(admin, target.getName() + " do not have any notes!");
                 }
             }
         }
@@ -329,14 +328,14 @@ public class NoteManager {
 
                 MySQL.getInstance().startUp();
 
-                msg.good(player, "Staff Notes have been reset!");
+                MessageManager.good(player, "Staff Notes have been reset!");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         } else if (hasFileSave()) {
             FlatSaving.getInstance().reset();
 
-            msg.good(player, "Staff Notes have been reset!");
+            MessageManager.good(player, "Staff Notes have been reset!");
         }
     }
 
@@ -354,7 +353,7 @@ public class NoteManager {
         if (target.hasPlayedBefore()) {
             return true;
         } else {
-            msg.error(player, target.getName() + " has never played before on this server!");
+            MessageManager.error(player, target.getName() + " has never played before on this server!");
             return false;
         }
     }

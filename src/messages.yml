@@ -1,0 +1,72 @@
+# Useful replacements:
+# - [PLAYER] : Players name
+# - [NOTE] : Note message
+# - [ID] : Note Id
+# - [TIME] : Note time created
+
+# Color codes: https://wiki.ess3.net/mc/
+
+# Prefix for Staff Notes
+prefix: "&0[&4Staff Notes&0]"
+
+# If the player do not have permission
+missing-permission: "You do not have permission!"
+
+# If the player have not been on the server before
+player-not-played: "[PLAYER] has never played before on this server!"
+
+# Alert sent to admin when a player joins the server with notes
+alert:
+  prefix: "SN ALERT"
+  message: "[PLAYER] have joined the server and have [amount] notes!"
+
+# Terms going to be used across Staff Notes
+common-terms:
+  usage: "Usage"
+  player: "Player"
+  message: "Message"
+  note: "Note"
+  name: "Name"
+  version: "Version"
+  author: "Author"
+  description: "Description"
+  website: "Website"
+
+# Commands messages
+commands:
+  default:
+    description: "&eShow a list of commands!"
+    dont-exist: "&4That command doesn't exist!"
+  info:
+    description: "&eShow information about the plugin!"
+  add:
+    description: "&eAdd a note onto a player!"
+    success: "&eNote on [PLAYER] have been added!"
+  show:
+    description: "&eShow a list of notes on a player!"
+    no-notes: "&e[PLAYER] do not have any notes!"
+    found:
+      description: "&eHere is the list of notes on [PLAYER]!"
+      id: "&eNote Id: [ID]"
+      player: "&ePlayer: [PLAYER]"
+      added-by: "&eNote added by: [PLAYER]"
+      date-added: "&eDate Added: [TIME]"
+      note: "&eNote: [NOTE]"
+  remove:
+    description: "&eRemove a note from a player!"
+    error: "&eThis note do not exists on [PLAYER]!"
+    success: "&eNote [ID] was removed from [PLAYER]"
+  removeall:
+    description: "&eRemove all notes from a player!"
+    error: "&e[PLAYER] do not have any notes!"
+    success: "&eAll notes have been removed from [PLAYER]!"
+  reset:
+    description: "&eRemove all notes from the database"
+    success: "&eStaff Notes DB have been reset!"
+  reload:
+    description: "&eReload the config"
+    success: "&eConfig have been reloaded!"
+
+gui:
+  title: "Players with notes"
+  description: "Get all notes about [PLAYER]"

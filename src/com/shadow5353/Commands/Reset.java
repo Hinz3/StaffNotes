@@ -8,13 +8,12 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 17-03-2018.
  */
 public class Reset extends StaffCommand {
-    private MessageManager message = MessageManager.getMessageManager();
     private NoteManager noteManager = new NoteManager();
 
     @Override
     public void onCommand(Player p, String[] args) {
         if (!(p.hasPermission("staffnotes.reset"))) {
-            message.noPermission(p);
+            MessageManager.noPermission(p);
         } else {
             noteManager.reset(p);
         }

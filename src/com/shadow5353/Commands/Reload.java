@@ -9,19 +9,19 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 17-03-2018.
  */
 public class Reload extends StaffCommand {
-    private MessageManager message = MessageManager.getMessageManager();
 
     @Override
     public void onCommand(Player p, String[] args) {
         if (!(p.hasPermission("staffnotes.reload"))) {
-            message.noPermission(p);
+            MessageManager.noPermission(p);
         } else {
+            MessageManager.reloadMessageFile();
             StaffNotes.getPlugin().reloadConfig();
 
             if (StaffNotes.getPlugin().getConfig().get("savingType").equals("file"))
                 FlatSaving.getInstance().setupNotes();
 
-            message.good(p, "Config have been reloaded!");
+            MessageManager.good(p, "Config have been reloaded!");
         }
     }
 

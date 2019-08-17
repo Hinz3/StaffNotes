@@ -11,16 +11,15 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 17-03-2018.
  */
 public class Remove extends StaffCommand {
-    private MessageManager message = MessageManager.getMessageManager();
     private NoteManager noteManager = new NoteManager();
 
     @Override
     public void onCommand(Player p, String[] args) {
         if (!(p.hasPermission("staffnotes.remove"))) {
-            message.noPermission(p);
+            MessageManager.noPermission(p);
         } else {
             if (!(args.length == 2)) {
-                message.error(p, "Usage: " + ChatColor.GOLD + "/sn remove <Player> <ID>");
+                MessageManager.error(p, "Usage: " + ChatColor.GOLD + "/sn remove <Player> <ID>");
             } else {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 

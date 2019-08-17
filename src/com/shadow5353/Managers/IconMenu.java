@@ -4,8 +4,6 @@ package com.shadow5353.Managers;
 Library made by nisovin.
  */
 
-import java.util.Arrays;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +15,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+
+import java.util.Arrays;
 
 public class IconMenu implements Listener {
 
@@ -64,7 +64,7 @@ public class IconMenu implements Listener {
 
     @EventHandler(priority=EventPriority.MONITOR)
     void onInventoryClick(InventoryClickEvent event) {
-        if (event.getInventory().getTitle().equals(name)) {
+        /*if (event.getInventory().getTitle().equals(name)) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
             if (slot >= 0 && slot < size && optionNames[slot] != null) {
@@ -83,7 +83,7 @@ public class IconMenu implements Listener {
                     destroy();
                 }
             }
-        }
+        }*/
     }
 
     public interface OptionClickEventHandler {

@@ -9,13 +9,12 @@ import org.bukkit.entity.Player;
  * Created by Jacob on 17-03-2018.
  */
 public class Show extends StaffCommand {
-    private MessageManager message = MessageManager.getMessageManager();
     private NoteManager noteManager = new NoteManager();
 
     @Override
     public void onCommand(Player p, String[] args) {
         if (!(p.hasPermission("staffnotes.show"))) {
-            message.noPermission(p);
+            MessageManager.noPermission(p);
         } else {
             if (!(args.length == 1)) {
                 noteManager.showPlayers(p);

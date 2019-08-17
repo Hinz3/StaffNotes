@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class Info extends StaffCommand{
-    private MessageManager message = MessageManager.getMessageManager();
-
     @Override
     public void onCommand(Player player, String[] args) {
         if (player.hasPermission("staffnotes.info")) {
@@ -19,11 +17,10 @@ public class Info extends StaffCommand{
             player.sendMessage(ChatColor.GOLD + "Version: " + ChatColor.YELLOW + pdf.getVersion());
             player.sendMessage(ChatColor.GOLD + "Author: " + ChatColor.YELLOW + pdf.getAuthors());
             player.sendMessage(ChatColor.GOLD + "Description: " + ChatColor.YELLOW + pdf.getDescription());
-//            player.sendMessage(ChatColor.GOLD + "Website: " + ChatColor.YELLOW + "https://hinz3.dk/plugins/staffnotes/");
-            player.sendMessage(ChatColor.GOLD + "Jenkins: " + ChatColor.YELLOW + "https://jenkins.hinz3.dk/job/StaffNotes/");
+            player.sendMessage(ChatColor.GOLD + "Website: " + ChatColor.YELLOW + pdf.getWebsite());
             player.sendMessage(ChatColor.GOLD + "---------------------------------------------");
         } else {
-            message.noPermission(player);
+            MessageManager.noPermission(player);
         }
     }
 

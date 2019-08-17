@@ -6,15 +6,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
 public class CommandManager implements CommandExecutor {
-    private MessageManager message = MessageManager.getMessageManager();
     private FileConfiguration config = StaffNotes.getPlugin().getConfig();
 
     private ArrayList<StaffCommand> cmds = new ArrayList<StaffCommand>();
@@ -31,7 +30,7 @@ public class CommandManager implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) {
-            message.error(sender, "Only players can use StaffNotes!");
+            MessageManager.error(sender, "Only players can use StaffNotes!");
             return true;
         }
 
@@ -39,14 +38,14 @@ public class CommandManager implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("staffnotes")) {
             if (!p.hasPermission("staffnotes.use")) {
-                message.noPermission(p);
+                MessageManager.noPermission(p);
             } else {
 
                 if (args.length == 0) {
                     p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
-                    message.command(p, "/sn" + ChatColor.BLACK + " : " + ChatColor.YELLOW + "Show a list of commands");
+                    MessageManager.command(p, "/sn" + ChatColor.BLACK + " : " + ChatColor.YELLOW + "Show a list of commands");
                     for (StaffCommand mc : cmds)
-                        message.command(p, "/sn " + aliases(mc) + " " + mc.getUsage() + ChatColor.BLACK + " : " + ChatColor.YELLOW + mc.getMessage());
+                        MessageManager.command(p, "/sn " + aliases(mc) + " " + mc.getUsage() + ChatColor.BLACK + " : " + ChatColor.YELLOW + mc.getMessage());
                     p.sendMessage(ChatColor.GOLD + "---------------------------------------------");
                     return true;
                 }
@@ -54,7 +53,7 @@ public class CommandManager implements CommandExecutor {
                 StaffCommand c = getCommand(args[0]);
 
                 if (c == null) {
-                    message.error(p, "That command doesn't exist!");
+                    MessageManager.error(p, "That command doesn't exist!");
                     return true;
                 }
 
